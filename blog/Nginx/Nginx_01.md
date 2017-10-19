@@ -81,5 +81,5 @@ root      6610  6474  0 15:20 pts/0    00:00:00 grep --color=auto ngin
 进入 ${nginx}/sbin目录，执行 <font color="red">**./sbin nginx -s reload**</font> ，平滑启动必须是nginx已运行状态
 
 - nginx 停止
- 进入 ${nginx}/sbin目录，执行 <font color="red">**./sbin/nginx stop**</font>
+ 进入 ${nginx}/sbin目录，执行 <font color="red">**./nginx stop**</font>
 
