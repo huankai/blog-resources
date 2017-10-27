@@ -17,4 +17,22 @@ categories:
 It is recommended to build and deploy CAS locally using the WAR Overlay method. 
 ```
 通过使用一个名叫Overlay的项目来生成一个可以直接用的war包，来部署服务端，于是我们先下载这个项目，官网给出了两个构筑格式的：
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/CAS/01.png)
 
+我这里使用Maven的，下载地址：[https://github.com/apereo/cas-overlay-template](https://github.com/apereo/cas-overlay-template)
+
+# 2、构筑Overlay #
+下载下来的Overlay默认配置就可以直接构筑能用的war包，直接使用它下边的build脚本执行 
+```
+build package
+```
+第一次构筑比较慢，可以在pom的repositories里加一个ali源，构筑会快一些。
+构筑完后在target下找到一个war包，放到你的tomcat8.5（官方建议8.0以上版本，我建议使用8.5，如果你用8.0跑不起来，记得换成8.5以上版本）下跑起来试试吧：
+
+http://localhost:8080/cas/login  默认账号：casuser  默认密码：Mellon  目前的配置仅有这一个用户。
+
+第一次会有两个红色警告，一个就是说你没用HTTPS登录，另一个就是你现在只有一个写死的用户，目前这个服务端只能看看，没什么实际用途。
+
+别急，我们下边开始解决这两个问题。
+
+这里先不要急着删掉你Tomcat下war包刚刚解压出来的内容
