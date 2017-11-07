@@ -537,7 +537,7 @@ repl_backlog_histlen:8326
 role:slave
 master_host:162.168.184.128
 master_port:6380
-master_link_status:down
+master_link_status:up
 master_last_io_seconds_ago:-1
 master_sync_in_progress:0
 slave_repl_offset:9166
@@ -577,20 +577,26 @@ OK
 6381 获取值 ：
 ```
 127.0.0.1:6381> get k3
-(nil)
+"v3"
 127.0.0.1:6381>
 ```
 
-由上可知，此种方式配置，会使 6381孤立，不会同步 Master的写操作。
+由上可知，此种方式配置，也会同步 6381 服务的数据。
 
-### 4.6、redis哨兵模式(sentinel) ###
+### 4.6、反从为主 ###
+
+
+
+### 4.7、redis哨兵模式(sentinel) ###
 
 Redis 的 Sentinel 用于管理多个 Redis 服务器（instance）， 该系统执行以下三个任务：
 - 监控（Monitoring）： Sentinel 会不断地检查你的主服务器和从服务器是否运作正常。
 - 提醒（Notification）： 当被监控的某个 Redis 服务器出现问题时， Sentinel 可以通过 API 向管理员或者其他应用程序发送通知。
 - 自动故障迁移（Automatic failover）： 当一个主服务器不能正常工作时， Sentinel 会开始一次自动故障迁移操作， 它会将失效主服务器的其中一个从服务器升级为新的主服务器， 并让失效主服务器的其他从服务器改为复制新的主服务器； 当客户端试图连接失效的主服务器时， 集群也会向客户端返回新主服务器的地址， 使得集群可以使用新主服务器代替失效服务器。
 
-#### 4.6.1、sentinel 配置文件： ####
+可以这样说，Redis的sentinel就是 [反从为主](#4.6-)的自动档。
+
+#### 4.7.1、sentinel 配置文件： ####
 
 安装完redis后，在redis根目录下，会有sentinel.conf 配置文件，该配置文件参数如下：
 
@@ -644,7 +650,7 @@ sentinel client-reconfig-script <master-name> <script-path>
 配置示例：sentinel client-reconfig-script mymaster /var/redis/reconfig.sh
 ```
 
-#### 4.6.2、一主双从三sentinel ####
+#### 4.7.2、一主双从三sentinel ####
 通过配置一主双从三sentinel实现redis 监控与自动故障迁移。
 
 ip地址分配如下:
@@ -866,7 +872,8 @@ not connected>
 ```
 
 
-
+主从复制的缺点：
+由于所有的写操作都是在master上进行，然后同步到slave，master复制到 slave会有一定的延时，当系统繁忙时，可能延时会更加严重，slave机器增多也会使这个问题更严重。 
 
 
 
