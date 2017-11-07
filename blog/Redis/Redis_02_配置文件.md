@@ -6,7 +6,18 @@ tags:
 categories:
     - Redis
 ---
-继 上一篇 ，Redis在Linux环境下安装完成后，来讲Redis配置文件
+
+Redis 的主配置文件在 Redis安装根目录下redis.conf，文件详细配置如下：
+
+配置文件单位说明：
+- 1k => 1000 bytes
+- 1kb => 1024 bytes
+- 1m => 1000000 bytes
+- 1mb => 1024*1024 bytes
+- 1g => 1000000000 bytes
+- 1gb => 1024*1024*1024 bytes
+如上可知， 1g 与 1gb所表示的大小是有区别的，单位大小写不敏感，1gb = 1Gb = 1gB = 1GB
+
 # 1、includes #
 载入其它配置文件信息
 比如说当你有多个server，而有一些配置项是它们公用的，那么你可以将这些公用的配置项写进一个配置文件common.conf里，然后这些server再include这个配置文件，这些server自己的配置项则分别写在自己的配置文件里。
