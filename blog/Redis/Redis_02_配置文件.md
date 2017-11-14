@@ -341,10 +341,10 @@ auto-aof-rewrite-percentage 100
 ```
 ## 11.6、auto-aof-rewrite-min-size ##
 
-aof文件会从 0 M 增长，前期 aof会进行大量的重写，在此时间没有必须这么频繁的重写，这里指定aof文件超过 64M时才重写，
+aof文件会从 0 M 增长，前期 aof会进行大量的重写，在此时间没有必须这么频繁的重写，这里指定aof文件超过 64M时才重写，正式环境建议至少设置3GB以上。
 和上面的 auto-aof-rewrite-percentage 参数是并的关系
 ```
-auto-aof-rewrite-min-size 64mb
+auto-aof-rewrite-min-size 3GB
 ```
 
 ## 11.7、aof-load-truncated ##
