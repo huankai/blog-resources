@@ -3,7 +3,6 @@ title: Spring Boot 快速入门 - 1 分钟搭建 Web 应用
 date: {{ date }}
 author: huangkai
 tags:
-categories:
     - Spring-Boot
 ---
 Spring Boot 不是一个新的框架，它是提供一种使我们更易于创建基于 Spring 的最小或零配置的独立应用和服务的方式。

@@ -2,9 +2,8 @@
 title: Mac 常用快捷键
 date: {{ date }}
 author: huangkai
-tags:
-categories:
-    - Mac
+tags: 
+	- Mac
 ---
 
 ### 前往文件夹： ###

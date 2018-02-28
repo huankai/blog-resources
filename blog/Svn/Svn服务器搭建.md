@@ -3,7 +3,6 @@ title: Linux Svn 服务器搭建
 date: {{ date }}
 author: huangkai
 tags:
-categories:
     - Linux
     - Svn
 ---

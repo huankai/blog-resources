@@ -3,7 +3,6 @@ title: Thymeleaf 教程
 date: {{ date }}
 author: huangkai
 tags:
-categories:
     - Thymeleaf
 ---
 Thymeleaf 是一个服务器端 Java 模板引擎，能够处理 HTML、XML、CSS、JAVASCRIPT 等模板文件。Thymeleaf 模板可以直接当作静态原型来使用，它主要目标是为开发者的开发工作流程带来优雅的自然模板，也是 Java 服务器端 HTML5 开发的理想选择。

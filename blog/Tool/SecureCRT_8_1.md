@@ -3,8 +3,7 @@ title: SecureCRT 8.1 安装与破解
 date: {{ date }}
 author: huangkai
 tags:
-categories:
-    - 常用工具
+    - Tool
 ---
 
 # 一、安装 #

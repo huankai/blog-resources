@@ -3,7 +3,6 @@ title: Nginx Linux 安装
 date: {{ date }}
 author: huangkai
 tags:
-categories:
     - Nginx
     - Linux
 ---

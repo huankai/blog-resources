@@ -1,26 +1,35 @@
 ---
-title: Redis 安装 
+title: Redis安装
 date: {{ date }}
 author: huangkai
 tags:
-categories:
-    - Linux
     - Redis
 ---
 
 ## 安装环境 ##
-
-|系统版本|Redis安装版本|
-|:--:|:--:|
-|CentOS Linux release 7.3.1611 (Core)|4.0.1|
-
+- 系统版本：CentOS Linux release 7.3.1611 (Core)
+- Redis版本：4.0.1
 
 ## 下载 ##
+下载地址： 请点击 [官网](http://download.redis.io/releases/redis-4.0.1.tar.gz) 下载 ，下载完成后，上传到 Linux某个目录中。
 
-&nbsp;&nbsp;&nbsp;&nbsp;下载地址： 请点击 [官网](http://download.redis.io/releases/redis-4.0.1.tar.gz) 下载 ，下载完成后，上传到 Linux某个目录中。
+也可以直接使用 wget 命令下载：
 
-&nbsp;&nbsp;&nbsp;&nbsp;也可以直接使用 wget 命令下载：
+```
+[huangkai@sjq01 soft]$ wget http://download.redis.io/releases/redis-4.0.1.tar.gz
+--2017-10-20 14:10:53--  http://download.redis.io/releases/redis-4.0.1.tar.gz
+Resolving download.redis.io (download.redis.io)... 109.74.203.151
+Connecting to download.redis.io (download.redis.io)|109.74.203.151|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1711660 (1.6M) [application/x-gzip]
+Saving to: ‘redis-4.0.1.tar.gz’
 
+100%[===============================================================================================================================================================================================>] 1,711,660    585KB/s   in 2.9s   
+2017-10-20 14:10:57 (585 KB/s) - ‘redis-4.0.1.tar.gz’ saved [1711660/1711660]
+[huangkai@sjq01 soft]$ ll
+total 1672
+-rw-rw-r--. 1 huangkai huangkai 1711660 Jul 24 21:59 redis-4.0.1.tar.gz
+```
 ```
 [huangkai@sjq01 soft]$ wget http://download.redis.io/releases/redis-4.0.1.tar.gz
 --2017-10-20 14:10:53--  http://download.redis.io/releases/redis-4.0.1.tar.gz
@@ -40,7 +49,7 @@ total 1672
 ## 安装 ##
 
 **1、解压文件**
-解压文件到指定目录 (/usr/local/)
+解压文件到指定目录 (``/usr/local/``)
 
 ```
 [huangkai@sjq01 soft]$ sudo tar xzf redis-4.0.1.tar.gz -C /usr/local/
@@ -68,7 +77,7 @@ drwxrwxr-x.  8 huangkai huangkai   4096 Jul 24 21:58 utils
 [huangkai@sjq01 redis-4.0.1]$ 
 
 ```
-如上所示， tar 命令 -C 参数，表示把 tar.gz包解压到 /usr/local目录中，上面需要输入密码，是因为/usr/local目录需要root用户才能访问，此时并不是root用户登陆。
+如上所示， tar 命令 ``-C`` 参数，表示把 tar.gz包解压到 ``/usr/local``目录中，上面需要输入密码，是因为``/usr/local``目录需要root用户才能访问，此时并不是root用户登陆。
 **2、赋予权限(可选操作)**
 
 给当前用户redis操作的权限(可选，如果你安装的目录普通用户有权限访问，或者你使用的是root用户，此操作不需要，如果没有权限，后面的操作可能都会报没有权限的错误)
@@ -120,7 +129,7 @@ drwxrwxr-x.  8 huangkai huangkai   4096 Jul 24 21:58 utils
 **3、编译安装**
 
 编译:	<font color="red">** make** </font>
-编译安装:	<font color="red">**sudo make install PREFIX=/usr/local/redis-4.0.1/ **</font> ，会在 /usr/local/redis-4.0.1/bin目录是创建Redis脚本文件
+编译安装:<font color="red">**sudo make install PREFIX=/usr/local/redis-4.0.1/ **</font> ，会在 ``/usr/local/redis-4.0.1/bin``目录中创建Redis脚本文件
 ```
 [huangkai@sjq01 redis-4.0.1]$ make
 ----------
@@ -250,9 +259,9 @@ net.core.somaxconn = 511
 [root@sjq01 ~]# sysctl -p	#使配置文件sysctl.conf生效
 ```
 原理：
-&nbsp;&nbsp;&nbsp;&nbsp;对于一个TCP连接，Server与Client需要通过三次握手来建立网络连接.当三次握手成功后,我们可以看到端口的状态由LISTEN转变为ESTABLISHED,接着这条链路上就可以开始传送数据了.每一个处于监听(Listen)状态的端口,都有自己的监听队列.监听队列的长度,与如下两方面有关：一个是 somaxconn参数；另一个是使用该端口的程序中listen()函数.故而somaxconn会限制了接收新 TCP 连接侦听队列的大小。对于一个经常处理新连接的高负载 web服务环境来说，默认的 128 太小了。大多数环境这个值建议增加到 1024 或者更多。 服务进程会自己限制侦听队列的大小，常常在它们的配置文件中有设置队列大小的选项。大的侦听队列对防止拒绝服务 DoS 攻击也会有所帮助。
+对于一个TCP连接，Server与Client需要通过三次握手来建立网络连接.当三次握手成功后,我们可以看到端口的状态由LISTEN转变为ESTABLISHED,接着这条链路上就可以开始传送数据了.每一个处于监听(Listen)状态的端口,都有自己的监听队列.监听队列的长度,与如下两方面有关：一个是 somaxconn参数；另一个是使用该端口的程序中listen()函数.故而somaxconn会限制了接收新 TCP 连接侦听队列的大小。对于一个经常处理新连接的高负载 web服务环境来说，默认的 128 太小了。大多数环境这个值建议增加到 1024 或者更多。 服务进程会自己限制侦听队列的大小，常常在它们的配置文件中有设置队列大小的选项。大的侦听队列对防止拒绝服务 DoS 攻击也会有所帮助。
 
-&nbsp;&nbsp;&nbsp;&nbsp;redis配置文件中有个参数，tcp-backlog默认值是511，而系统默认的somaxconn是128，所以redis启动以后报出这个warnning
+redis配置文件中有个参数，tcp-backlog默认值是511，而系统默认的somaxconn是128，所以redis启动以后报出这个warnning
 
 **2、WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.**
 

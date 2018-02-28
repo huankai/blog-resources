@@ -15,7 +15,7 @@ Redis的发布与订阅功能说白了就是消息，它支持消息功能 ，�
 发布与订阅命令：
 
 
-|命令|语法|开始版本|描述||
+|命令|语法|开始版本|描述|
 |:---:|:---:|:---:|---|
 |PSUBSCRIBE|PSUBSCRIBE pattern [pattern ...]|2.0.0|订阅给定的模式(patterns)|
 |PUBSUB|PUBSUB subcommand [argument [argument ...]]|2.8.0|PUBSUB是一个内省命令，允许检查Pub / Sub子系统的状态。它由单独记录的子命令组成| 

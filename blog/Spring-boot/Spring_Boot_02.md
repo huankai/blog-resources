@@ -3,7 +3,6 @@ title: Spring Boot 添加 Thymeleaf 支持
 date: {{ date }}
 author: huangkai
 tags:
-categories:
     - Spring-Boot
 ---
 Spring Boot 对 Thymeleaf 模板引擎提供了自配置的良好支持。Spring Boot 1.5.7.RELEASE 版本默认使用的是 Thymeleaf 2.0+，本文使用 Thymeleaf 3.0+ 版本，在 pom.xml 中添加以下声明：
@@ -93,4 +92,4 @@ public class Application {
 
 当修改 css、js 等静态资源文件的内容或模板文件的内容时，刷新客户端浏览器，发现内容还是老的，说明 Spring Boot 内置的 Servelt 容器并没有实时重新加载修改过的文件内容。你只能在每次修改静态资源文件时，虽然不需要重启服务，但是你要重新编译一次，IntelliJ IDEA 中按一次 Ctrl + F9 即可。
 
-有关 Thymeleaf 基本使用可查看[ Thymeleaf 教程](https://huankai.github.io/2017/10/24/Thymeleaf_01/) 
+有关 Thymeleaf 基本使用可查看[ Thymeleaf 教程](https://huankai.github.io/2018/02/22/Thymeleaf_01/) 

@@ -2,10 +2,9 @@
 title: Mac MySql安装
 date: {{ date }}
 author: huangkai
-tags:
-categories:
-    - Mac
-    - Mysql
+tags: 
+	- Mac
+	- MySql
 ---
 
 ## 安装 ##
