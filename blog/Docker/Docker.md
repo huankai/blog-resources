@@ -7,13 +7,32 @@ tags:
 ---
 
 # 一、介绍 #
-## 1.1、镜像 ##
+## 1.1、Docker 介绍： ##
+Docker 是一个开源的应用容器引擎，基于 Go 语言并遵从Apache2.0协议开源，可以轻松的为任何应用创建一个轻量级的、可移植的、自给自足的容器。开发者在笔记本上编译测试通过的容器可以批量地在生产环境中部署，包括VMs（虚拟机）、bare metal、OpenStack 集群和其他的基础应用平台。 
+Docker 容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）,更重要的是容器性能开销极低。
+
+Docker通常用于如下场景：
+- web应用的自动化打包和发布
+- 自动化测试和持续集成、发布
+- 在服务型环境中部署和调整数据库或其他的后台应用
+- 从头编译或者扩展现有的OpenShift或Cloud Foundry平台来搭建自己的PaaS环境。
+
+Docker的优点：
+- 简化程序：
+Docker 让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，便可以实现虚拟化。Docker改变了虚拟化的方式，使开发者可以直接将自己的成果放入Docker中进行管理。方便快捷已经是 Docker的最大优势，过去需要用数天乃至数周的任务，在Docker容器的处理下，只需要数秒就能完成。
+- 避免选择恐惧症
+如果你有选择恐惧症，还是资深患者。Docker 帮你打包你的纠结！比如 Docker 镜像；Docker 镜像中包含了运行环境和配置，所以 Docker 可以简化部署多种应用实例工作。比如 Web 应用、后台应用、数据库应用、大数据应用比如 Hadoop 集群、消息队列等等都可以打包成一个镜像部署。
+- 节省开支
+一方面，云计算时代到来，使开发者不必为了追求效果而配置高额的硬件，Docker 改变了高性能必然高价格的思维定势。Docker 与云的结合，让云空间得到更充分的利用。不仅解决了硬件管理的问题，也改变了虚拟化的方式。
+
+## 1.2、Docker 基本概念： ##
+### 1.2.1、镜像 ###
  Docker镜像(Image)就是一个只读的模板，可以用来创建Docker容器，一个镜像可以启动多个Docker容器。
-## 1.2、容器 ##
+### 1.2.2、容器 ###
 Docker利用容器(Container)来运行应用，容器是从镜像创建的运行实利，它可以启动、停止、删除等。每个容器都是相互隔离的、保证安全的平台。
 可以把容器看成是一个简单的Linux环境（包括ROOT用户权限、进程空间、用户空间、网络等）和运行在其中的应用程序。
 
-## 1.3、 Registry ##
+### 1.2.3、 Registry ###
 Registry(仓库)是集中存放镜像文件的场所。
 Registry对其中的镜像进行分类管理。
 - 一个Registry 会有多个Repository
@@ -82,56 +101,92 @@ Docker默认的镜像为 https://hub.docker.com/ ，从此镜像下载会非常�
 # 三、常用操作 #
 
 ## 3.1、列出镜像 ##
-docker images
+使用 `docker images` 命令列出 镜像，如下，表示有 nexus镜像
+```
+[root@sjq01 ~]# docker images
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+docker.io/sonatype/nexus   latest              f7d8039f8626        2 weeks ago         454.6 MB
+```
 
 ## 3.2、删除镜像 ##
 docker rmi (名称:tag) 或 docker rmi (image id)
 名称与tag中间用英文冒号分隔，可以确定一个镜像，也可以直接使用 image id
+```
+[root@sjq01 ~]# docker rmi docker.io/sonatype/nexus:latest
+```
+或使用镜像id删除
+```
+[root@sjq01 ~]# docker rmi f7d8039f8626
+```
 
 ## 3.3、导入/导出镜像 ##
 - 导入
 将本机文件导入到docker中
 执行命令的语法：
-<font color='red'>docker save (名称:tag) > /root/文件名.tar.gz</font>
-会将指定的镜像导出到/root目录下
+ <font color='red'>docker load < 完整的文件路径名</font>
+```
+[root@sjq01 ~]# docker load < /root/nexus.tar.gz
+```
 
 - 导出
  将Docker镜像导出到本机文件中
 执行命令的语法：
- <font color='red'>docker load < 完整的文件路径名</font>
+<font color='red'>docker save (名称:tag) > /root/文件名.tar.gz</font>
+会将指定的镜像导出到/root目录下，如导出nexus 到本地文件
+```
+[root@sjq01 ~]# docker save docker.io/sonatype/nexus:latest > /root/nexus.tar.gz
+```
 
 # 四、Docker容器操作  #
 
 ## 4.1、启动容器 ##
 - 以交互式启动：
 docker run -it --name 容器名称 镜像 /bin/bash
-容器名称必须唯一
+```
+[root@sjq01 ~]# docker run -it --name my-nexus docker.io/sonatype/nexus:latest /bin/bash
+```
+容器名称可以任意指定，必须唯一
 退出交互模式，直接输入 `exit` 退出
 
 - 以守护进程方式启动：
 docker run -d --name 容器名称 镜像
+```
+[root@sjq01 ~]# docker run -d --name my-nexus docker.io/sonatype/nexus:latest
+```
 容器名称必须唯一
 
 ## 4.2、停止容器 ##
 docker stop 容器名称或容器Id
+```
+[root@sjq01 ~]# docker stop my-nexus
+```
 
 ## 4.3、删除容器 ##
 删除指定容器 ：`docker rm 容器名称或容器Id`
 删除所有容器： `docker rm 'docker ps -a -q'`
 
 ## 4.4、查看容器 ##
-docker pa -a
+使用 ``docker ps -a`` 查看：
+```
+[root@sjq01 ~]# docker ps -a
+CONTAINER ID        IMAGE                             COMMAND                  CREATED             STATUS              PORTS                    NAMES
+d5579464bcef        f7d8039f8626                      "/bin/sh -c '${JAVA_H"   12 minutes ago      Up 12 minutes       0.0.0.0:8081->8081/tcp   nexus
+2b2ca50cb7f8        docker.io/sonatype/nexus:latest   "-p 8081:8081 --name "   15 hours ago        Created             8081/tcp                 stupefied_borg
+cb71f72f94b9        docker.io/sonatype/nexus:latest   "-p 8081:8081 --name"    15 hours ago        Created             8081/tcp                 prickly_lichterman
+[root@sjq01 ~]# 
+```
 
 # 五、Docker 搭建Tomcat服务 # 
-使用docker pull tomcat 下载镜像
+使用``docker pull tomcat`` 下载镜像
 
 启动Docker Tomcat服务 ：
- docker run -d --name my-tomcat -p 8888:8080 镜像
+``docker run -d --name my-tomcat -p 8888:8080 镜像``
+这里的`-p 8888:8080` 指的是宿主机的8888端口号映射到docker tomcat容器的8080端口号，此时如果启动成功，访问宿主机的8888服务，其实就是访问 docker tomcat的8080服务。
 
 进入到 Docker Tomcat运行环境：
-docker exec -it my-tomcat /bin/bash
+``docker exec -it my-tomcat /bin/bash``
 
 将 war 应用上传到 Docker Tomcat webapps目录中：
-docker cp 应用程序war包 my-tomcat:/usr/local/tomcat/webapps
+``docker cp 应用程序war包 my-tomcat:/usr/local/tomcat/webapps``
 
 回车上传完成后，tomcat 会自动加载上传的war，不需要手动重启。
