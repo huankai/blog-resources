@@ -82,56 +82,92 @@ Docker默认的镜像为 https://hub.docker.com/ ，从此镜像下载会非常�
 # 三、常用操作 #
 
 ## 3.1、列出镜像 ##
-docker images
+使用 `docker images` 命令列出 镜像，如下，表示有 nexus镜像
+```
+[root@sjq01 ~]# docker images
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+docker.io/sonatype/nexus   latest              f7d8039f8626        2 weeks ago         454.6 MB
+```
 
 ## 3.2、删除镜像 ##
 docker rmi (名称:tag) 或 docker rmi (image id)
 名称与tag中间用英文冒号分隔，可以确定一个镜像，也可以直接使用 image id
+```
+[root@sjq01 ~]# docker rmi docker.io/sonatype/nexus:latest
+```
+或使用镜像id删除
+```
+[root@sjq01 ~]# docker rmi f7d8039f8626
+```
 
 ## 3.3、导入/导出镜像 ##
 - 导入
 将本机文件导入到docker中
 执行命令的语法：
-<font color='red'>docker save (名称:tag) > /root/文件名.tar.gz</font>
-会将指定的镜像导出到/root目录下
+ <font color='red'>docker load < 完整的文件路径名</font>
+```
+[root@sjq01 ~]# docker load < /root/nexus.tar.gz
+```
 
 - 导出
  将Docker镜像导出到本机文件中
 执行命令的语法：
- <font color='red'>docker load < 完整的文件路径名</font>
+<font color='red'>docker save (名称:tag) > /root/文件名.tar.gz</font>
+会将指定的镜像导出到/root目录下，如导出nexus 到本地文件
+```
+[root@sjq01 ~]# docker save docker.io/sonatype/nexus:latest > /root/nexus.tar.gz
+```
 
 # 四、Docker容器操作  #
 
 ## 4.1、启动容器 ##
 - 以交互式启动：
 docker run -it --name 容器名称 镜像 /bin/bash
-容器名称必须唯一
+```
+[root@sjq01 ~]# docker run -it --name my-nexus docker.io/sonatype/nexus:latest /bin/bash
+```
+容器名称可以任意指定，必须唯一
 退出交互模式，直接输入 `exit` 退出
 
 - 以守护进程方式启动：
 docker run -d --name 容器名称 镜像
+```
+[root@sjq01 ~]# docker run -d --name my-nexus docker.io/sonatype/nexus:latest
+```
 容器名称必须唯一
 
 ## 4.2、停止容器 ##
 docker stop 容器名称或容器Id
+```
+[root@sjq01 ~]# docker stop my-nexus
+```
 
 ## 4.3、删除容器 ##
 删除指定容器 ：`docker rm 容器名称或容器Id`
 删除所有容器： `docker rm 'docker ps -a -q'`
 
 ## 4.4、查看容器 ##
-docker pa -a
+使用 ``docker ps -a`` 查看：
+```
+[root@sjq01 ~]# docker ps -a
+CONTAINER ID        IMAGE                             COMMAND                  CREATED             STATUS              PORTS                    NAMES
+d5579464bcef        f7d8039f8626                      "/bin/sh -c '${JAVA_H"   12 minutes ago      Up 12 minutes       0.0.0.0:8081->8081/tcp   nexus
+2b2ca50cb7f8        docker.io/sonatype/nexus:latest   "-p 8081:8081 --name "   15 hours ago        Created             8081/tcp                 stupefied_borg
+cb71f72f94b9        docker.io/sonatype/nexus:latest   "-p 8081:8081 --name"    15 hours ago        Created             8081/tcp                 prickly_lichterman
+[root@sjq01 ~]# 
+```
 
 # 五、Docker 搭建Tomcat服务 # 
-使用docker pull tomcat 下载镜像
+使用``docker pull tomcat`` 下载镜像
 
 启动Docker Tomcat服务 ：
- docker run -d --name my-tomcat -p 8888:8080 镜像
+``docker run -d --name my-tomcat -p 8888:8080 镜像``
+这里的`-p 8888:8080` 指的是宿主机的8888端口号映射到docker tomcat容器的8080端口号，此时如果启动成功，访问宿主机的8888服务，其实就是访问 docker tomcat的8080服务。
 
 进入到 Docker Tomcat运行环境：
-docker exec -it my-tomcat /bin/bash
+``docker exec -it my-tomcat /bin/bash``
 
 将 war 应用上传到 Docker Tomcat webapps目录中：
-docker cp 应用程序war包 my-tomcat:/usr/local/tomcat/webapps
+``docker cp 应用程序war包 my-tomcat:/usr/local/tomcat/webapps``
 
 回车上传完成后，tomcat 会自动加载上传的war，不需要手动重启。
