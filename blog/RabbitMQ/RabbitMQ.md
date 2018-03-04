@@ -87,3 +87,8 @@ Setting tags for user "admin" to [administrator] ...
 如上，出现以上信息，表示rabbitmq启动成功，可以使用浏览器访问：``http://ip:15672``
 登陆用户名：admin
 登陆密码:admin
+
+后台进程启动：
+```
+[root@huangkai sbin]# ./rabbitmq-server -detached
+```
