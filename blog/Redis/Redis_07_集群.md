@@ -37,7 +37,7 @@ Redis集群配置:
 
 gem 安装 redis ruby 接口 ：  <font color='red'>``gem install redis``</font>
 
-01.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/01.png)
 
 如果出现以上错误，表示redis 4.0.1需要的ruby版本至少大于等2.2.2，而上面通过yum安装的ruby版本为2.0 。
 解决办法如下：
@@ -45,7 +45,7 @@ gem 安装 redis ruby 接口 ：  <font color='red'>``gem install redis``</font>
 - 2、安装RVM:
 先执行：<font color='red'>``gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3``</font>
 再执行：<font color='red'>``curl -L get.rvm.io | bash -s stable``</font>
-02.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/02.png)
 在安装rvm时，可能会有连接不到远程服务器的问题，这要就要看你的人品了，有时候不会出现这样的问题，目录没有找到解决办法，等一会再执行，好像就可以了。
 - 3、加载配置文件：<font color='red'>``source /usr/local/rvm/scripts/rvm``</font>
 - 4、查看rvm库中已知的ruby版本：<font color='red'>``rvm list known``</font>
@@ -201,7 +201,7 @@ S: c5861fd86db135dd19bf5b48f7f15343b1844833 192.168.64.128:6381
 - 之后跟着其它参数则是实例的地址列表，程序会使用这些地址的实例创建集群。接着，redis-trib会打印一些预想中的配置给你看，如果你觉得没问题，就可以输入 yes，redis-trib 就会将这份配置应用到集群中。
 
 查看集群状（可以在任意一台节点上查看）：
-03.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/03.png)
 从上图可以看出，每个集群的主、从节点、以及每个master节点的哈希槽 redis-cluster把所有的物理节点映射到 【0-16383】个slot(哈希槽)上，cluster负责维护 node<->slot<->value
 
 ## 3.3、集群高可用测试： ##
@@ -211,7 +211,7 @@ S: c5861fd86db135dd19bf5b48f7f15343b1844833 192.168.64.128:6381
 
 
 ### 3.3.2、查看当前集群各节点的状态： ###
-04.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/04.png)
 
 ### 3.3.3、redis-trib.rb命令参数说明： ###
 
@@ -231,7 +231,7 @@ S: c5861fd86db135dd19bf5b48f7f15343b1844833 192.168.64.128:6381
 ```
 /usr/local/redis-4.0.1/src/redis-trib.rb add-node 192.168.64.135:6379 192.168.64.128:6379
 ```
-05.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/05.png)
 
 执行上面的命令，就会添加新的节点到集群中，新的节点不包含任何数据，因为它没有分配 slot(哈希槽),默认新添加的节点是master(主)节点，当集群需要将某个从节点升级为新的主节点时，这个新节点不会被选中。
 
@@ -240,15 +240,15 @@ S: c5861fd86db135dd19bf5b48f7f15343b1844833 192.168.64.128:6381
 ```
 /usr/local/redis-4.0.1/src/redis-trib.rb reshard 192.168.64.129:6379
 ```
-06.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/06.png)
 
 上面的会询问你需要移动多少个哈希槽(slot) ，从 1 – 16384，这里输入 500。
 
-07.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/07.png)
 
 上面又会询问你接收的节点 id是哪个，很显然这个节点id为刚添加的新节点id，可以连接redis集群查看如下：
 
-08.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/08.png)
 新添加的节点为 红色框部分，解读如下：
 
 |参数|描述|
@@ -260,15 +260,15 @@ S: c5861fd86db135dd19bf5b48f7f15343b1844833 192.168.64.128:6381
 |connected  0-5460|如果connected后面有数字，表示为主节点的哈希槽，只有master的connected才有可能有哈希槽的值，slave不会有|
 
 很显然，在上面应该输入新增加节点的id 即: 63f13eba35c50dc8503bebad513f4265368c7aa4
-09.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/09.png)
 
 又会询问，需要从哪些节点分配 ，如果输入**all** ，会将每个 master节点分配500个哈希槽到新的节点上，你也可以指定输入想要从哪些节点移动到新节点的master id，然后输入 **done** 完成。这里我输入 **all** 。
 然后就给你列出一些移动哈希槽的计划列表，如果没有问题，输入**yes**  即可
-10.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/10.png)
 
 再查看集群节点信息如下：我们可以发现此时 192.168.64.135:6379 节点下有哈希槽了，主节点添加成功。
 
-11.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/11.png)
 
 ## 4.2、添加从节点 ##
 先在任意一台中集群节点服务上执行以下命令将新的节点添加到集群中：
@@ -276,7 +276,7 @@ S: c5861fd86db135dd19bf5b48f7f15343b1844833 192.168.64.128:6381
 # /usr/local/redis-4.0.1/src/redis-trib.rb add-node 192.168.64.135:6380 192.168.64.128:6379
 ```
 查看节点信息如下：
-12.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/12.png)
 
 新添加的节点默认为主节点，将新节点设置为192.168.64.135：6379的 从节点，操作如下：
 使用redis-cli 连接上新节点的shell，输入命令：<font color='red'>**cluster replicate**</font> 对应master的节点id
@@ -287,7 +287,7 @@ OK
 192.168.64.135:6380>
 ```
 查看集群节点信息如下，此时192.168.64.135:6380(slave)的主节点为192.168.64.135:6379
-13.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/13.png)
 
 注意：
 在线添加slave时，需要 dump 整个master进程，并传递到slave，再由slave加载rdb文件到内存，rdb传输过程中master可能无法提供服务，整个过程消耗大量IO,要小心操作，最好在服务器访问量小的时候进行。
@@ -298,60 +298,58 @@ OK
 
 使用 <font color='red'>**redis-trib del-node**</font> 节点ip:port 节点id 删除：
 删除192.168.64.135:6380节点，删除节点后，也会将该节点服务停用。
-14.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/14.png)
 
 查看集群节点信息如下，可知删除的节点已不在集群中：
-15.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/15.png)
 
 
 ## 5.2、删除master节点： ##
 删除主节点之前，需要先使用 reshard移除该 master 的全部slot(哈希槽),然后再删除当前节点，（目前只能将删除的master的slot迁移到一个节点上），操作方式与配置slot类似，指定具体的Source node即可。下面以删除192.168.64.135:6379节点为例说明：
-16.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/16.png)
 
-17.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/17.png)
 
-18.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/18.png)
 
-19.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/19.png)
 
 再次查看节点信息如下，发现 192.168.64.135:6379没有了哈希槽(slot)
 
-20.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/20.png)
 
 此时，我们就可以删除节点了
 
-21.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/21.png)
 
 再次查看节点信息，发现 192.168.64.135:6379 这个节点已不在集群中。
 
-22.png
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Redis/cluster/22.png)
 
 # 六、为集群添加密码授权 #
 
-- 方式一：为集群添加密码授权
+方式一：为集群添加密码授权
 在每个redis服务的redis.conf 添加内容如下：
 ```
-masterauth 1234567 
 requirepass 1234567
-``` 
+```
 说明：这种方式需要重新启动各节点
 
-- 方式二： 进入各个实例进行设置
+方式二： 进入各个实例进行设置
 ```
-./redis-cli -c -h 192.168.64.128 -p 6379 
-config set masterauth 1234567 
+./redis-cli -c -h 192.168.64.128 -p 6379
 config set requirepass 1234567 
 config rewrite
-``` 
-注意：各个节点密码都必须一致，否则Redirected就会失败， 推荐这种方式，这种方式会把密码写入到redis.conf里面去，且不用重启。
+```
+注意：各个节点密码都必须一致，否则Redirected就会失败，推荐这种方式，这种方式会把密码写入到redis.conf里面去，且不用重启。
 
 设置密码之后如果需要使用redis-trib.rb的各种命令，如下：
 ```
-redis-trib.rb check 192.168.64.128，
-[ERR] Sorry, can’t connect to node 192.168.64.128:7000
-``` 
+redis-trib.rb check 192.168.64.128
+[ERR] Sorry, can’t connect to node 192.168.64.128:6379
+```
 上面会报错，解决方法：
-<font color='red'>vim /usr/local/rvm/gems/ruby-2.3.3/gems/redis-4.0.1/lib/redis/client.rb</font> ,找到password,并修改password为上面配置的密码即可
+<font color='red'>``vim /usr/local/rvm/gems/ruby-2.3.3/gems/redis-4.0.1/lib/redis/client.rb``</font> ,找到password,并修改password为上面配置的密码即可
 ```
 class Redis
   class Client
@@ -388,8 +386,4 @@ class Redis
 
 ```
 
-
-
-
-
-
+网上找资料说还需要在每个节点上配置 <font color='red'>masterauth</font> 的密码，其实不用，本人亲测，<font color='red'>masterauth</font> 这个参数有没有都不会影响到集群，就算每个节点配置的<font color='red'>masterauth</font> 不一样也能正常使用，但 <font color='red'>requirepass</font> 这个就必须得一样了，并且修改<font color='red'>vim /usr/local/rvm/gems/ruby-2.3.3/gems/redis-4.0.1/lib/redis/client.rb</font>这个文件的password的值也是配置文件中 requirepass 参数的值。 官网说的很详细，<font color='red'>masterauth</font> 这个参数是配置主从复制中需要认证的参数。
