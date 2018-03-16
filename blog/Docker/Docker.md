@@ -76,6 +76,38 @@ docker-common.x86_64              2:1.12.6-71.git3e8e77d.el7.centos.1  @extras
 [root@sjq01 ~]$ systemctl start docker.service
 ```
 
+启动常见错误：
+1、SELinux is not supported with the overlay2 graph driver on this kernel
+```
+[root@sjq-01 ~]# systemctl start docker.service 
+Job for docker.service failed because the control process exited with error code. See "systemctl status docker.service" and "journalctl -xe" for details.
+[root@sjq-01 ~]# systemctl status docker.service
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Mon 2018-03-12 17:21:57 CST; 3s ago
+     Docs: http://docs.docker.com
+  Process: 3623 ExecStart=/usr/bin/dockerd-current --add-runtime docker-runc=/usr/libexec/docker/docker-runc-current --default-runtime=docker-runc --exec-opt native.cgroupdriver=systemd --userland-proxy-path=/usr/libexec/docker/docker-proxy-current --seccomp-profile=/etc/docker/seccomp.json $OPTIONS $DOCKER_STORAGE_OPTIONS $DOCKER_NETWORK_OPTIONS $ADD_REGISTRY $BLOCK_REGISTRY $INSECURE_REGISTRY $REGISTRIES (code=exited, status=1/FAILURE)
+ Main PID: 3623 (code=exited, status=1/FAILURE)
+
+Mar 12 17:21:56 sjq-01 systemd[1]: Starting Docker Application Container Engine...
+Mar 12 17:21:56 sjq-01 dockerd-current[3623]: time="2018-03-12T17:21:56.051545029+08:00" level=info msg="libcontainerd: new containerd process, pid: 3628"
+Mar 12 17:21:57 sjq-01 dockerd-current[3623]: Error starting daemon: SELinux is not supported with the overlay2 graph driver on this kernel. Either boot into a newer kernel or disable selinux in docker (--selinux-enabled=false)
+Mar 12 17:21:57 sjq-01 systemd[1]: docker.service: main process exited, code=exited, status=1/FAILURE
+Mar 12 17:21:57 sjq-01 systemd[1]: Failed to start Docker Application Container Engine.
+Mar 12 17:21:57 sjq-01 systemd[1]: Unit docker.service entered failed state.
+Mar 12 17:21:57 sjq-01 systemd[1]: docker.service failed.
+```
+解决方法：
+```
+vim  /etc/sysconfig/docker
+添加配置内容如下：
+	DOCKER_OPTS="--storage-driver=devicemapper"
+并注释配置内容：
+	# OPTIONS='--selinux-enabled --log-driver=journald --signature-verification=false'
+
+```
+详见：https://docs.docker.com/storage/storagedriver/select-storage-driver/
+
 ## 2.4、停止 ： ##
 ```
 [root@sjq01 ~]$ systemctl stop docker.service
@@ -141,15 +173,20 @@ docker rmi (名称:tag) 或 docker rmi (image id)
 
 ## 4.1、启动容器 ##
 - 以交互式启动：
-docker run -it --name 容器名称 镜像 /bin/bash
+`docker run -it --name 容器名称 镜像 /bin/bash`
+`-i` : 以交互方式运行容器
+`-t` ：表示告诉docker为要创建的容器分配一个ty伪终端
+`--name`: 指定创建的容器名，如果无此参数，docker将生成随机的容器名，容器名称可以任意指定，必须唯一
+`镜像`:要运行的镜像
+`/bin/bash` : 以交互模式启动指定的 shell
 ```
 [root@sjq01 ~]# docker run -it --name my-nexus docker.io/sonatype/nexus:latest /bin/bash
 ```
-容器名称可以任意指定，必须唯一
 退出交互模式，直接输入 `exit` 退出
 
 - 以守护进程方式启动：
-docker run -d --name 容器名称 镜像
+`docker run -d --name 容器名称 镜像`
+`-d`:守护进程方式启动
 ```
 [root@sjq01 ~]# docker run -d --name my-nexus docker.io/sonatype/nexus:latest
 ```
