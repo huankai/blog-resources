@@ -192,6 +192,15 @@ docker rmi (名称:tag) 或 docker rmi (image id)
 ```
 容器名称必须唯一
 
+上面的启动方式是启动一个不存在的容器，如果这个服务已创建，则不需要再次以上面的方式启动，可以直接使用 <font color='red'>**docker start 容器名**</font>启动，如：
+```
+docker start my-nexus
+```
+重启：
+```
+docker restart my-nexus
+```
+
 ## 4.2、停止容器 ##
 docker stop 容器名称或容器Id
 ```
@@ -227,3 +236,64 @@ cb71f72f94b9        docker.io/sonatype/nexus:latest   "-p 8081:8081 --name"    1
 ``docker cp 应用程序war包 my-tomcat:/usr/local/tomcat/webapps``
 
 回车上传完成后，tomcat 会自动加载上传的war，不需要手动重启。
+
+
+# 六、Docker 搭建 Mysql 服务  #
+
+使用``docker pull mysql:5.7`` 下载MySql镜像
+查看docker 镜像：
+```
+[root@sjq-01 mysql]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/mysql     5.7                 5d4d51c57ea8        3 weeks ago         374 MB
+[root@sjq-01 mysql]# 
+```
+
+启动 Docker Mysql 服务
+```
+[root@sjq-01 mysql]# docker run --name mysql -v /data/mysql/data/:/var/lib/mysql -v /data/mysql/conf/:/etc/mysql/conf.d -v /data/mysql/logs:/logs -d -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 docker.io/mysql:5.7
+546176b9d5915804e85dde6ba0a59f248691078390fed0750751cc464122ba15
+[root@sjq-01 mysql]#
+```
+上面启动参数解释：
+-v /data/mysql/data/:/var/lib/mysql # 将主机/data/mysql/data/挂载到容器的/var/lib/mysql
+-v /data/mysql/conf/:/etc/mysql/conf.d  #将主机/data/mysql/conf/挂载到容器的/etc/mysql/conf.d
+-v /data/mysql/logs:/logs		#将主机/data/mysql/logs目录挂载到容器的/logs
+-e MYSQL_ROOT_PASSWORD=root 设置环境变量，mysql root账号的密码
+
+其中 -v 参数可以指定多个，-e 参数也可以指定多个，查看更多环境变量请点击 [这里](https://hub.docker.com/_/mysql/) 查看
+
+查看 docker 进程如下，可知， mysql服务已启动成功
+```
+[root@sjq-01 mysql]# docker ps
+CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                    NAMES
+546176b9d591        docker.io/mysql:5.7   "docker-entrypoint..."   10 minutes ago      Up 10 minutes       0.0.0.0:3306->3306/tcp   mysql
+[root@sjq-01 mysql]# 
+```
+
+MySQL(5.7.19)的默认配置文件是 /etc/mysql/my.cnf 文件。如果想要自定义配置，建议在 /etc/mysql/conf.d 目录中创建 .cnf 文件。新建的文件可以任意起名，只要保证后缀名是 cnf 即可。新建的文件中的配置项可以覆盖 /etc/mysql/my.cnf 中的配置项。
+
+进入docker mysql 容器
+```
+[root@sjq-01 mysql]# docker exec -it mysql /bin/bash
+```
+
+登陆mysql服务器：
+```
+root@546176b9d591:/# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.21 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+输入运行容器指定的 MYSQL_ROOT_PASSWORD 的值，登陆mysql

@@ -103,6 +103,11 @@ Fetch: 先把更新拉下来，此时工作区不会自动合并,在用merge或r
 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Git/11.png)
 
+reset Type:
+- soft: 软重置，不会改变工作区和索引
+- mixed: 混合，保持工作区不变，重置索引文件
+- hard：重置工作区和索引，会丢弃在本地的变更
+
 选择<font color='red'>**Hard --> Ok**</font> ，此时，你的工作区应该就回退到此版本了。如果你再使用 
 <font color='red'>**TortoiseGit --> Show log**</font> 查看日志记录，只会显示到回退版本的提交记录。
 注意，此时你要提交修改到远程服务器，会提交失败，因为你的工作区不是最新的版本
@@ -158,8 +163,8 @@ hello
 如上，红色的行表示为有冲突的地方，你可以光标指定批有冲突的地方，右键会弹出菜单：
 Use this text block: 使用此文本块
 Use this whole file: 使用整个文件
-Use text block from right before left：在左前使用文本块
-Use text block from left before right在右前使用文本块
+Use text block from right before left 优先使用左边文本块
+Use text block from left before right 优先右边文本块
 
 可根据你的选择进行编辑冲突，最后要保证下面合并后的内容不能有红色的行，然后点击菜单栏中的的 **mark as resolved**(标记为解决)。关闭此窗口，冲突解决完成。然后，你就可以继续提交你本地的修改了。
 
