@@ -1,4 +1,12 @@
-配置使用 browsersync（浏览器同步工具）
+---
+title: browsersync(浏览器同步工具)
+date: {{ date }}
+author: huangkai
+tags:
+    - Vue
+---
+
+配置使用 browsersync（）
 
 ## 一、介绍 ##
 官网地址：

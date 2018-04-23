@@ -1,3 +1,11 @@
+---
+title: Vue 简介
+date: {{ date }}
+author: huangkai
+tags:
+    - Vue
+---
+
 ## 一、前端三大框架介绍 ##
 - angular
 	- 09年诞生、Google公司
