@@ -36,11 +36,11 @@ https://tortoisegit.org/download/
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Git/03.png)
 
 语言包支持：
-在此下载页面下方会有各语言包支持，如果你有英文恐惧症，还是资深患者，可以根据你的系统位数下载对应的中文包。不过我强烈建议尤其是搞技术的同学们使用英文版。
+在此下载页面下方会有各语言包支持，如果你有英文恐惧症，还是资深患者，可以根据你的系统位数下载对应的中文包。
 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Git/04.png)
 
-下载语言包后，安装完成，然后右键 TortoiseGit  Settings 中设置对应的语言包，如下图所示，不知道为什么，我的windows 10 没有安装成功，之前在windows 7上有安装成功，可能是偶尔的人品问题，不过我还是喜欢用英文版本的，就不纠结这个了。
+下载语言包后，安装完成，然后右键 TortoiseGit  Settings 中设置对应的语言包，如下图所示
 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Git/05.png)
 
