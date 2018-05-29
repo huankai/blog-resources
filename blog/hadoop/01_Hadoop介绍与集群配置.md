@@ -15,10 +15,10 @@ Hadoop目前有1.x / 2.x / 3.x 三个大版本：
 - 3.x : 刚出来的新版本。
 	
 Hadoop是 Apache Lucene 创始人Dou Cutting 创建的，最早起源于Nutch,它是Lucene(全文检索框架)的子项目，Nutch的设计目标是构建一个大型的全网搜索引擎，包括网页抓取、索引、查询等功能。但随着抓取网页数量的增加，遇到了严重的可扩展性问题，如何解决数十亿网页的存储问题和索引问题。
-2003年Google发表了一篇论文为该问题提供了可行的解决方案，论文中描述的是谷歌的产品架构，该架构称为：**谷歌分布式文件系统(GFS)**,可以解决在网页爬取和索引过程中产生的超大文件的存储需求。
-2004年,Google发表论文向全世界介绍了谷歌版的**MapReduce**系统。
+2003年Google发表了一篇论文为该问题提供了可行的解决方案，论文中描述的是谷歌的产品架构，该架构称为：**[谷歌分布式文件系统(GFS)](https://pan.baidu.com/s/1oWdpypk2d8WnH2Z8R_s3jQ)**,可以解决在网页爬取和索引过程中产生的超大文件的存储需求。
+2004年,Google发表论文向全世界介绍了谷歌版的**[MapReduce](https://pan.baidu.com/s/1YrRUlpoSXg0OQ8NYP0X2rg)**系统。
 同时期，Nutch的开发人员完成了相应的开源实现HDFS和 MapReduce，并从Nutch中剥离出来成为独立的Hadoop项目，到2008年1月，Hadoop成为Apache顶级项目，迎来了它的快速发展期。
-2006年Google发表了论文是关于**BigTable**的，这促使了后来的Hbase的发展。
+2006年Google发表了论文是关于**[BigTable](https://pan.baidu.com/s/1NsK-L0lOmFUedgh2DiJlfg)**的，这促使了后来的Hbase的发展。
 因此，Hadoop极其生态圈的发展离不开Google的贡献。
 	
 # 	二、Hadoop的特性  #
@@ -88,7 +88,7 @@ rtt min/avg/max/mdev = 0.846/1.060/1.360/0.219 ms
 [root@sjq-02 ~]# 
 ```
 
-配置免密登陆(128可以使用 **ssh** 免密登陆129和130两台服务器):
+配置免密登陆(128可以使用 **ssh** 免密登陆128、129和130三台服务器<font color='red'>注意:128也需要配置</font>):
 在128服务器上执行如下：
 ```
 #第一步：生成公钥私钥
@@ -98,10 +98,11 @@ rtt min/avg/max/mdev = 0.846/1.060/1.360/0.219 ms
 #第二步：按锁头
 #命令语法为: ssh-copy-id -i ~/.ssh/id_rsa.pub <romte_ip>
 #如果你的ssh端口不是默认的22,可以使用 -p 参数指定端口号,如:（ssh-copy-id -i ~/.ssh/id_rsa.pub -p 24 <romte_ip>）
-[root@sjq-01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.64.129
+#分别执行 128、129、130
+[root@sjq-01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.64.128
 
-#回车输入密码即可使用 (ssh 192.168.64.129) 登陆到129服务器，
-#配置免密登陆130服务器配置也是如此。
+#回车输入密码即可使用 (ssh 192.168.64.128) 登陆到128服务器，
+#配置免密登陆129和130服务器也是如此。
 ```
 
 部署环境:
@@ -133,11 +134,11 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 
 ## 3.1、 hadoop-env.sh ##
 该文件设置的是Hadoop运行时需要的环境变量，JAVA_HOME是必须设置的，即使当前系统环境变量中配置了JAVA_HOME,它也是不能识别的，因为Hadoop即使在本机上运行，它也会把当前的执行环境当成远程服务器。
+
 ```
-vim ${HADOOP_HOME}/etc/hadoop/hadoop-env.sh
-	
-export JAVA_HOME= JAVA_HOME的绝对路径.
-```	
+# vim ${HADOOP_HOME}/etc/hadoop/hadoop-env.sh
+export JAVA_HOME= JAVA_HOME的绝对路径
+```
 
 ## 3.2、core-site.xml ##
 hadoop的核心配置文件，有默认的配置项目 core-default.xml
@@ -218,11 +219,16 @@ hadoop-node-3
 site 配置选项的优先级会大于 default 文件中的配置，如果有配置的话，就会覆盖 `***-default.xml` 中的配置选项。
 
 所有的配置文件选项，可以在官网文档中查询:
-core-default.xml ： http://hadoop.apache.org/docs/r2.9.1/hadoop-project-dist/hadoop-common/core-default.xml
-hdfs-default.xml ：http://hadoop.apache.org/docs/r2.9.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
-mapred-default.xml ： http://hadoop.apache.org/docs/r2.9.1/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml
-yarn-default.xml ： http://hadoop.apache.org/docs/r2.9.1/hadoop-yarn/hadoop-yarn-common/yarn-default.xml
-与上个版本相比过时的配置 ： http://hadoop.apache.org/docs/r2.9.1/hadoop-project-dist/hadoop-common/DeprecatedProperties.html
+core-default.xml ： 
+  http://hadoop.apache.org/docs/r2.9.1/hadoop-project-dist/hadoop-common/core-default.xml
+hdfs-default.xml ：
+  http://hadoop.apache.org/docs/r2.9.1/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
+mapred-default.xml ： 
+  http://hadoop.apache.org/docs/r2.9.1/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml
+yarn-default.xml ： 
+  http://hadoop.apache.org/docs/r2.9.1/hadoop-yarn/hadoop-yarn-common/yarn-default.xml
+与上个版本相比过时的配置 ： 
+  http://hadoop.apache.org/docs/r2.9.1/hadoop-project-dist/hadoop-common/DeprecatedProperties.html
 ## 3.8 、每台服务器复制配置 ##
 
 以上6个配置文件修改完成后，将 128上的 ${HADOOP_HOME}目录上传到 129 和 130两台服务器上:
