@@ -1,5 +1,5 @@
 ---
-title: ETL 利器Kettle实战应用解析系列 ————【部门与班级数据处理】
+title: ETL 利器Kettle实战应用解析系列 ————【02_部门与班级数据处理】
 date: {{ date }}
 author: huangkai
 tags:

@@ -258,27 +258,29 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 ```
 
 单节点依次启动：
-- 在主节点上使用以下命令启动HDFS NameNode:
+- 在主节点（192.168.64.128）上使用以下命令启动HDFS NameNode:
 
 ```
 [root@sjq-01 ~]# hadoop-daemon.sh start namenode
 ```
-- 在每个从节点上使用以下命令启动HDFS DataNode:
+- 在每个从节点(192.168.64.128,192.168.64.129,192.168.64.130)上使用以下命令启动HDFS DataNode:
 
 ```
-[root@sjq-01 ~]# hadoop-daemon.sh start datanode
+[root@sjq-02 ~]# hadoop-daemon.sh start datanode
 ```
 
-- 在主节点上使用以下命令启动YARN ResourceManager:
+- 在主节点上(192.168.64.128)使用以下命令启动YARN ResourceManager:
 
 ```
 [root@sjq-01 ~]# yarn-daemon.sh start resourcemanager
 ```
 
-- 在每个从节点上使用以下命令启动YARN nodemanager:
+- 在每个从节点(192.168.64.129,192.168.64.130)上使用以下命令启动YARN nodemanager:
 
 ```
-[root@sjq-01 ~]# yarn-daemon.sh start nodemanager
+[root@sjq-02 ~]# yarn-daemon.sh start nodemanager
 ```
 
 以上脚本位于 ${HADOOP_HOME}/sbin 目录 下，如果想要停止某个角色，只需要把命令中的 `start` 改为 `stop` 即可。
+
+集群启动成功后，可以使用 50070 端口访问 NameNode ，使用 8088 端口访问 ResourceManager.

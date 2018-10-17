@@ -1,5 +1,5 @@
 ---
-title: ETL 利器Kettle实战应用解析系列 ————【生成日志记录到数据库表中】
+title: ETL 利器Kettle实战应用解析系列 ————【04_生成日志记录到数据库表中】
 date: {{ date }}
 author: huangkai
 tags:

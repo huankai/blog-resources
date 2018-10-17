@@ -1,5 +1,5 @@
 ---
-title: ETL 利器Kettle实战应用解析系列一【Kettle使用介绍与安装】
+title: ETL 利器Kettle实战应用解析系列一【01_Kettle使用介绍与安装】
 date: {{ date }}
 author: huangkai
 tags:
