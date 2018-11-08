@@ -350,3 +350,49 @@ THP（Transparent Huge Pages）是一个使管理Huge Pages自动化的抽象层
 export PATH=$PATH:/usr/local/redis-4.0.1/bin
 [root@sjq01 bin]# source /etc/profile		#使配置文件生效
 ```
+
+# redis docker安装 #
+docker的安装请查看 [这里](https://huankai.github.io/2018/02/28/Docker/)
+
+下载redis 镜像，要下载指定版本的，使用 redis:版本名
+```
+[huangkai@sjq01 ~]$ docker pull redis:4.0.11
+Trying to pull repository docker.io/library/redis ... 
+sha256:b6977d3ce8c7ee5c1a59146cd58912b5945b8b5ecf887ef2f3d1b2e402387f4e: Pulling from docker.io/library/redis
+f17d81b4b692: Pull complete 
+b32474098757: Pull complete 
+8980cabe8bc2: Pull complete 
+f2ceb2908b0a: Pull complete 
+4330a6e801e5: Pull complete 
+ac88bc721c38: Pull complete 
+Digest: sha256:b6977d3ce8c7ee5c1a59146cd58912b5945b8b5ecf887ef2f3d1b2e402387f4e
+Status: Downloaded newer image for docker.io/redis:4.0.11
+```
+
+查看 镜像
+
+```
+[huangkai@sjq010 ~]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker.io/redis     4.0.11              f1897cdc2c6b        7 days ago          83.4 MB
+[huangkai@sjq01 ~]$ 
+
+```
+
+启动 redis:
+创建redi 容器并启动
+```
+[huangkai@sjq010 ~]$ docker run -p 6379:6379 --name redis --restart=always -v /data/docker/redis/redis.conf:/etc/redis/redis.conf -v /data/docker/redis/data:/data -d docker.io/redis:4.0.11 redis-server /etc/redis/redis.conf
+```
+参数说明：
+-p: 宿主机的端口与docker容器端口映射
+-name: 指定启动的redis名称，必须在docker 所有容器中唯一
+--restart: 重启策略：
+	no -  容器退出时，不重启容器（默认值）,
+	on-failure - 只有在非0状态退出时才从新启动容器
+	always - 无论退出状态是如何，都重启容器；
+	如果在创建时创未指定 --restart=always ,可通过update 命令设置
+	docker update --restart=always 容器名称 
+-v 指定参数
+-d  以守护进程启动
+

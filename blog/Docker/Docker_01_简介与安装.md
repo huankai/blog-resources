@@ -1,5 +1,5 @@
 ---
-title: Docker
+title: Docker_01_简介与安装
 date: {{ date }}
 author: huangkai
 tags:
@@ -113,7 +113,7 @@ vim  /etc/sysconfig/docker
 [root@sjq01 ~]$ systemctl stop docker.service
 ```
 
-## 2.4、配置国内镜像： ##
+## 2.5、配置国内镜像： ##
 Docker默认的镜像为 https://hub.docker.com/ ，从此镜像下载会非常慢，可根据如下配置使用国内镜像下载
 ```
 [root@sjq01 ~]$ vim /etc/docker/daemon.json
@@ -130,10 +130,25 @@ Docker默认的镜像为 https://hub.docker.com/ ，从此镜像下载会非常�
 [root@sjq01 ~]$systemctl restart docker
 ```
 
+## 2.6、普通用户操作docker： ##
+
+```
+[root@sjq01 ~]# groupadd docker  #添加docker组
+[root@sjq01 ~]# gpasswd -a huangkai docker #将用户huangkai添加到docker组中
+Adding user huangkai to group docker  
+[root@sjq01 ~]# systemctl restart docker #重启 docker
+[root@sjq01 ~]# sudo chmod a+rw /var/run/docker.sock  #修改docker.sock文件的权限
+```
+## 2.7、开机启动docker： ##
+
+```
+[root@sjq01 ~]# systemctl enabld docker
+```
+
 # 三、常用操作 #
 
 ## 3.1、列出镜像 ##
-使用 `docker images` 命令列出 镜像，如下，表示有 nexus镜像
+使用 `docker images` 命令列出已存在的镜像，如下，表示有 nexus镜像
 ```
 [root@sjq01 ~]# docker images
 REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
@@ -248,17 +263,36 @@ REPOSITORY          TAG                 IMAGE ID            CREATED             
 docker.io/mysql     5.7                 5d4d51c57ea8        3 weeks ago         374 MB
 [root@sjq-01 mysql]# 
 ```
+创建mysql相关目录 ：
+```
+[root@sjq-01 mysql]# mkdir -p /data/docker/mysql/conf # mysql配置目录
+[root@sjq-01 mysql]# mkdir -p /data/docker/mysql/logs  #mysql log 目录 
+[root@sjq-01 mysql]# mkdir -p /data/docker/mysql/data # mysql data目录
+``` 
+
+创建配置文件：
+```
+[root@sjq-01 mysql]# cd /data/docker/mysql/conf
+[root@sjq-01 conf]# vim my.cnf
+添加如下内容：
+
+[mysqld]
+character-set-server=utf8 #编码设置
+lower_case_table_names=1  #忽略表名大小写
+```
+
+
 
 启动 Docker Mysql 服务
 ```
-[root@sjq-01 mysql]# docker run --name mysql -v /data/mysql/data/:/var/lib/mysql -v /data/mysql/conf/:/etc/mysql/conf.d -v /data/mysql/logs:/logs -d -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 docker.io/mysql:5.7
+[root@sjq-01 mysql]# docker run --name mysql --restart=always -v /data/docker/mysql/data/:/var/lib/mysql -v /data/docker/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf -v /data/docker/mysql/logs:/logs -d -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 docker.io/mysql:5.7
 546176b9d5915804e85dde6ba0a59f248691078390fed0750751cc464122ba15
 [root@sjq-01 mysql]#
 ```
 上面启动参数解释：
--v /data/mysql/data/:/var/lib/mysql # 将主机/data/mysql/data/挂载到容器的/var/lib/mysql
--v /data/mysql/conf/:/etc/mysql/conf.d  #将主机/data/mysql/conf/挂载到容器的/etc/mysql/conf.d
--v /data/mysql/logs:/logs		#将主机/data/mysql/logs目录挂载到容器的/logs
+-v /data/docker/mysql/data/:/var/lib/mysql # 将主机/data/mysql/data/挂载到容器的/var/lib/mysql
+-v /data/docker/mysql/conf/:/etc/mysql/conf.d  #将主机/data/mysql/conf/挂载到容器的/etc/mysql/conf.d
+-v /data/docker/mysql/logs:/logs		#将主机/data/mysql/logs目录挂载到容器的/logs
 -e MYSQL_ROOT_PASSWORD=root 设置环境变量，mysql root账号的密码
 
 其中 -v 参数可以指定多个，-e 参数也可以指定多个，查看更多环境变量请点击 [这里](https://hub.docker.com/_/mysql/) 查看

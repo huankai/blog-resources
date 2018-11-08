@@ -61,8 +61,8 @@ Missing bintray credentials /home/huangkai/.bintray/.credentials. Some bintray f
 ```
 
 启动 kafka manager:
-[huangkai@sjq-01 kafka_manager]$ **nohup ./bin/kafka-manager -Dconfig.file=./conf/application.conf >/dev/null 2>&1 & **
+[huangkai@sjq-01 kafka_manager]$ **nohup ./bin/kafka-manager -Dconfig.file=./conf/application.conf -Dkafka-manager.zkhosts="localhost:2181" >/dev/null 2>&1 & **
 
-启动之后，就可以使用浏览器访问 http://192.168.64.128:9000 ，默认端口号为 9000，可以使用 -Dhttp.port=9001 参数来指定端口号，如下图所示
+启动之后，就可以使用浏览器访问 http://192.168.64.128:9000 ，默认端口号为 9000，可以使用 -Dhttp.port=9001 参数来指定端口号，如下图所示	
 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/kafka/kafka_manager_01.png)

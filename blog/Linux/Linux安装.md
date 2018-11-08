@@ -1,0 +1,33 @@
+---
+title: Linux 虚拟机安装
+date: {{ date }}
+author: huangkai
+tags:
+    - Linux
+---
+
+# 配置网络环境 #：
+
+```
+TYPE=Ethernet
+BOOTPROTO=none
+DEFROUTE=yes
+UUID="746efeb2-2501-434f-8589-3b3539aaecc2"
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+DEVICE=ens33
+ONBOOT=yes
+IPADDR=192.168.64.128
+PREFIX=24
+GATEWAY=192.168.64.2
+DNS1=192.168.64.2
+IPV6_PEERDNS=yes
+IPV6_PEERROUTES=yes
+IPV6_PRIVACY=no
+
+```
