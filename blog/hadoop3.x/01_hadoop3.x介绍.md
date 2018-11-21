@@ -19,11 +19,12 @@ hadoop 3.x 使用 jdk 8 运行编译的，最少需要 JDK 1.8
 
 # 二、集群安装 #
 
-说明：
-192.168.64.128(sjq128) :NameNode、ResourceManager
-192.168.64.129(sjq129):SecondaryNameNode、NodeManager、DataNode
-192.168.64.130(sjq130):NodeManager、DataNode
-192.168.64.150(sjq150):NodeManager、DataNode
+部署环境说明：
+- 192.168.64.128(sjq128) :NameNode、ResourceManager
+- 192.168.64.129(sjq129):SecondaryNameNode、NodeManager、DataNode
+- 192.168.64.130(sjq130):NodeManager、DataNode
+- 192.168.64.150(sjq150):NodeManager、DataNode
+
 下载 Hadoop : 
 
 ```
