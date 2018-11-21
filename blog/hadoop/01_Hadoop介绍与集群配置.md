@@ -95,7 +95,7 @@ rtt min/avg/max/mdev = 0.846/1.060/1.360/0.219 ms
 [root@sjq-01 ~]# ssh-keygen -t rsa
 #输入以上命令，按下三个回车。
 
-#第二步：按锁头
+#第二步：
 #命令语法为: ssh-copy-id -i ~/.ssh/id_rsa.pub <romte_ip>
 #如果你的ssh端口不是默认的22,可以使用 -p 参数指定端口号,如:（ssh-copy-id -i ~/.ssh/id_rsa.pub -p 24 <romte_ip>）
 #分别执行 128、129、130

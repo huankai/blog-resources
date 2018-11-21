@@ -228,7 +228,7 @@ public class TestListener {
 
 生产者同上面一样，再定义两个消费者，这两个消费者属于同一组，和上面的消费者(hk-pms-web) 不在同一个组
 
-## 2.1、新建消费者一(hk-kafka-spring-cloud-stream-consumer01)##
+## 2.1、新建消费者一(hk-stream-consumer01)##
 
 - application.yml配置如下：
 
@@ -317,7 +317,7 @@ public class Consumer01Application {
 
 ```
 
-## 2.2、新建消费者二(hk-kafka-spring-cloud-stream-consumer02)##
+## 2.2、新建消费者二(hk-stream-consumer02)##
 
 和上面一样，只有配置文件中的 端口号与 spring.application.name 改一下，<font color='red'>特别注意，spring.cloud.stream.binding.input.group 参数值一定要一样，不然不会在同一个组，发送的消息就都能接收到了，这也是这个案例的关键配置。</font> 这里不贴出来了。
 

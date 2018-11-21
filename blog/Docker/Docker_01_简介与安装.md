@@ -255,6 +255,8 @@ cb71f72f94b9        docker.io/sonatype/nexus:latest   "-p 8081:8081 --name"    1
 
 # 六、Docker 搭建 Mysql 服务  #
 
+## 6.1、搭建mysql 5.7版本 ##
+
 使用``docker pull mysql:5.7`` 下载MySql镜像
 查看docker 镜像：
 ```
@@ -331,3 +333,141 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
 ```
 输入运行容器指定的 MYSQL_ROOT_PASSWORD 的值，登陆mysql
+
+
+## 6.2、搭建mysql 8.0.13 版本 ##
+
+使用``docker pull mysql:8.0.13`` 下载MySql镜像
+查看docker 镜像：
+```
+[huangkai@sjq-20 mysql8.0.13]$ docker images
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+192.168.64.150:8870/tomcat   8.5                 ca9e2fccef98        9 days ago          463 MB
+docker.io/tomcat             8.5                 ca9e2fccef98        9 days ago          463 MB
+192.168.64.150:8870/maven    3.5-alpine          fb4bb0d89941        2 weeks ago         119 MB
+docker.io/mysql              8.0.13              2dd01afbe8df        2 weeks ago         485 MB
+192.168.64.150:8870/nginx    latest              dbfc48660aeb        3 weeks ago         109 MB
+192.168.64.150:8870/redis    4.0.11              f1897cdc2c6b        3 weeks ago         83.4 MB
+docker.io/sonatype/nexus3    latest              f2014d39f023        3 weeks ago         509 MB
+docker.io/jenkins            latest              cd14cecfdb3a        3 months ago        696 MB
+[huangkai@sjq-20 mysql8.0.13]$
+```
+创建mysql相关目录 ：
+```
+[root@sjq-01 mysql8.0.13]# mkdir -p /data/docker/mysql8.0.13/conf # mysql配置目录
+[root@sjq-01 mysql8.0.13]# mkdir -p /data/docker/mysql8.0.13/logs  #mysql log 目录 
+[root@sjq-01 mysql8.0.13]# mkdir -p /data/docker/mysql8.0.13/data # mysql data目录
+``` 
+
+创建配置文件：
+
+```
+[root@sjq-01 mysql8.0.13]# cd /data/docker/mysql8.0.13/conf
+[root@sjq-01 conf]# vim my.cnf
+```
+
+添加如下内容：
+```
+[msqld]
+
+# 端口号配置，默认为 3306
+# port=3306
+
+#忽略表名大小写
+lower_case_table_names=1
+
+# 设置 mysql 数据存放目录
+datadir=/data/docker/mysql8.0.13/data
+
+#允许最大连接数，默认为 151
+max_connections=500
+
+#允许连接失败的次数，可以防止有人从该主机试图攻击数据库系统，默认值为100
+max_connect_errors=10
+
+################################  InnoDB         ########################################
+
+# 创建新表时将使用的默认存储引擎
+default-storage-engine=INNODB
+
+innodb_buffer_pool_size=2G
+
+#innodb_additional_pool_size=20M
+
+innodb_log_file_size=256M
+
+innodb_log_buffer_size=12M
+
+innodb_flush_log_at_trx_commit=2
+
+#innodb_flush_method
+
+#thread_cache=8
+
+#innodb_autoextend_increment=128M
+
+#这里确认是否起用压缩存储功能
+innodb_file_per_table=1
+
+#innodb_file_format=barracuda #mysql 8 不支持该功能
+
+#决定压缩程度的参数，如果你设置比较大，那么压缩比较多，耗费的CPU资源也较多；
+#相反，如果设置较小的值，那么CPU占用少。默认值6，可以设置0-9#
+innodb_compression_level=6
+
+#指定在每个压缩页面可以作为空闲空间的最大比例，
+#该参数仅仅应用在设置了innodb_compression_failure_threshold_pct不为零情况下，并且压缩失败率通过了中断点。
+#默认值50，可以设置范围是0到75
+innodb_compression_pad_pct_max=50
+
+[client]
+
+# 设置mysql客户端连接服务端时默认使用的端口
+# port=3306
+
+# client 编码
+default-character-set=utf8
+```
+其他配置参数请参考: https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html
+
+
+启动 Docker Mysql 服务
+```
+[root@sjq-20 mysql8.0.13]# docker run --name mysql --restart=always -v /data/docker/mysql8.0.13/data/:/var/lib/mysql -v /data/docker/mysql8.0.13/conf/my.cnf:/etc/mysql/conf.d/my.cnf -v /data/docker/mysql8.0.13/logs:/logs -d -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 docker.io/mysql:8.0.13
+546176b9d9915804e85dde6ba0a54f248691078396fed075k751cc464122ba39
+[root@sjq-20 mysql]#
+```
+
+查看 docker 进程如下，可知， mysql服务已启动成功
+```
+[huangkai@sjq-20 mysql8.0.13]$ docker ps
+CONTAINER ID        IMAGE                    COMMAND                  CREATED             STATUS              PORTS                                                      NAMES
+36b177dacf03        docker.io/mysql:8.0.13   "docker-entrypoint..."   22 minutes ago      Up 6 minutes        0.0.0.0:3306->3306/tcp, 33060/tcp                          mysql8
+[huangkai@sjq-20 mysql8.0.13]$ 
+```
+
+进入docker mysql 容器
+```
+[root@sjq-01 mysql]# docker exec -it mysql8 /bin/bash
+```
+
+登陆mysql服务器：
+```
+root@36b177dacf03:/# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.13 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+```
+输入运行容器指定的 MYSQL_ROOT_PASSWORD 的值，登陆mysql
+
