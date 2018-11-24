@@ -356,7 +356,6 @@ sjq140
 ## 4.3、刷新 namenode、刷新resourcemanager ##
 
 ```
-[huangkai@sjq128 hadoop]$ clear
 [huangkai@sjq128 hadoop]$ hdfs dfsadmin -refreshNodes
 Refresh nodes successful
 [huangkai@sjq128 hadoop]$ yarn rmadmin -refreshNodes
@@ -364,3 +363,47 @@ Refresh nodes successful
 [huangkai@sjq128 hadoop]$ 
 ```
 
+## 4.4、使用浏览器查看（3.1.1版本从这步开始好像不行了，节点并没有退役，待完善...） ##
+
+
+## 4.5、删除退役节点 ##
+
+1、从 namenode节点的 dfs.hosts 文件中删除退役节点的 Hostname
+
+```
+[huangkai@sjq128 hadoop]$ vim dfs.hosts # 将 退役的节点 hostname 删除，保存
+```
+2、刷新nameNode，刷新resourcemanager
+```
+[huangkai@sjq128 hadoop]$ hdfs dfsadmin -refreshNodes
+Refresh nodes successful
+[huangkai@sjq128 hadoop]$ yarn rmadmin -refreshNodes
+2018-11-21 17:37:27,129 INFO client.RMProxy: Connecting to ResourceManager at sjq128/192.168.64.128:8033
+[huangkai@sjq128 hadoop]$ 
+```
+
+## 4.6、删除 workers 文件中配置的 退役节点的 Hostname ##
+
+```
+[huangkai@sjq128 hadoop]$ vim workers # 将 退役的节点 hostname 删除，保存
+```
+
+## 4.7、单独停止退役节点的DataNode 进程  ##
+
+在退役节点的服务器执行（如这里退役是节点是 sjq140）
+```
+[huangkai@sjq140 hadoop]$ hdfs --daemon stop datanode
+[huangkai@sjq140 hadoop]$ yarn --daemon stop nodemanager
+[huangkai@sjq140 hadoop]$ jps 
+17862 Jps
+[huangkai@sjq140 install]$ 
+```
+
+## 4.8、重新负载均衡(可选) ##
+
+如果数据不均匀，可以使用如下命令实现集群的再平衡，在namenode节点上执行：
+
+```
+[huangkai@sjq128 hadoop]$ start-balancer.sh 
+[huangkai@sjq128 hadoop]$
+```
