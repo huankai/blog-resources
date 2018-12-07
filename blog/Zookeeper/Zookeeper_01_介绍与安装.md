@@ -157,4 +157,7 @@ PrivateTmp=true
 [Install]
 WantedBy=multi-user.target
 ```
-# 三、zookeeper-dev-ZooInspector #
+# 三、zookeeper 管理工具 #
+
+3.1、 [zkUI](https://github.com/DeemOpen/zkui)
+3.2、[zookeeper-dev-ZooInspector](https://issues.apache.org/jira/secure/attachment/12436620/ZooInspector.zip)

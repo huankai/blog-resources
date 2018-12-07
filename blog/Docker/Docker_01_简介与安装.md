@@ -123,6 +123,11 @@ Docker默认的镜像为 https://hub.docker.com/ ，从此镜像下载会非常�
 "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn"]
 }
 
+或者
+
+{
+"registry-mirrors": ["https://registry.docker-cn.com"]
+}
 ```
 重启Docker:
 配置完之后执行下面的命令，以使docker的配置文件生效
@@ -142,7 +147,7 @@ Adding user huangkai to group docker
 ## 2.7、开机启动docker： ##
 
 ```
-[root@sjq01 ~]# systemctl enabld docker
+[root@sjq01 ~]# systemctl enable docker
 ```
 
 # 三、常用操作 #
@@ -183,6 +188,10 @@ docker rmi (名称:tag) 或 docker rmi (image id)
 ```
 [root@sjq01 ~]# docker save docker.io/sonatype/nexus:latest > /root/nexus.tar.gz
 ```
+
+## 3.4、查看容器信息 ##
+
+`docker inspect 容器Id`
 
 # 四、Docker容器操作  #
 

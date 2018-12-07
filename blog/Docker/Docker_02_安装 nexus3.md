@@ -43,6 +43,43 @@ docker.io/sonatype/nexus3   latest              f2014d39f023        2 weeks ago 
 可以添加 NEXUS_CONTEXT=nexus 指定上下文路径
 
 注意：nexus3 存储的磁盘最小需要 4G，可以通过` -e INSTALL4J_ADD_VM_PARAMS="-XX:MaxDirectMemorySize=3g" `参数指定。
+# 使用 docker-compose 安装 #
+
+创建数据文件目录并赋予权限：
+```
+[huangkai@sjq150 ~]$ sudo mkdir -p /data/docker/nexus3
+[huangkai@sjq150 docker]$ sudo chown -R 200:200 nexus3/ #必须给 200权限，否则在启动的时候会权限不足的错误
+```
+
+docker-compose 文件内容：
+
+```
+......
+ nexus:
+    image: docker.io/sonatype/nexus3:latest
+    container_name: nexus3
+    ports:
+      - "8081:8081"
+      - "8870:8870"
+      - "8871:8871"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/data/docker/nexus3:/nexus-data"
+    restart: "always"
+......
+```
+启动 nexus:
+
+```
+[huangkai@sjq150 docker]$ docker-compose up -d nexus
+
+[huangkai@sjq150 docker]$ docker-compose ps
+ Name               Command               State                                   Ports                                 
+------------------------------------------------------------------------------------------------------------------------
+nexus3   sh -c ${SONATYPE_DIR}/star ...   Up      0.0.0.0:8081->8081/tcp, 0.0.0.0:8870->8870/tcp, 0.0.0.0:8871->8871/tcp
+[huangkai@sjq150 docker]$ 
+```
 
 # 查看日志： #
 
