@@ -67,17 +67,82 @@ docker-common.x86_64              2:1.12.6-71.git3e8e77d.el7.centos.1  @extras
 [root@sjq01 ~]# yum -y remove docker-common.x86_64 
 ```
 - yum 安装
+
 ```
-[root@sjq01 ~]$ yum -y install docker
+# 安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
+[root@sjq01 ~]# yum install -y yum-utils device-mapper-persistent-data lvm2
+
+# 设置yum源
+[root@sjq01 ~]# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# 可以查看所有仓库中所有docker版本，并选择特定版本安装
+[root@sjq01 ~]# yum list docker-ce --showduplicates | sort -r
+ * updates: mirrors.163.com
+Loading mirror speeds from cached hostfile
+Loaded plugins: fastestmirror
+Installed Packages
+ * extras: mirrors.aliyun.com
+ * epel: mirrors.aliyun.com
+docker-ce.x86_64            3:18.09.0-3.el7                    docker-ce-stable 
+docker-ce.x86_64            18.06.1.ce-3.el7                   docker-ce-stable 
+docker-ce.x86_64            18.06.1.ce-3.el7                   @docker-ce-stable
+docker-ce.x86_64            18.06.0.ce-3.el7                   docker-ce-stable 
+docker-ce.x86_64            18.03.1.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            18.03.0.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.12.1.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.12.0.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.09.1.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.09.0.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.06.2.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.06.1.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.06.0.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.03.3.ce-1.el7                   docker-ce-stable 
+docker-ce.x86_64            17.03.2.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.03.1.ce-1.el7.centos            docker-ce-stable 
+docker-ce.x86_64            17.03.0.ce-1.el7.centos            docker-ce-stable 
+ * base: mirrors.aliyun.com
+Available Packages
+
+ 
+[root@sjq01 ~]# sudo yum install docker-ce -y #由于repo中默认只开启stable仓库，故这里安装的是最新稳定版 18.06.1
+[root@sjq01 ~]# yum -y install docker-ce-18.06.1.ce
 ```
 
+验证：
+
+```
+[root@sjq01 ~]# docker version
+Client:
+ Version:           18.06.1-ce
+ API version:       1.38
+ Go version:        go1.10.3
+ Git commit:        e68fc7a
+ Built:             Tue Aug 21 17:23:03 2018
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server:
+ Engine:
+  Version:          18.06.1-ce
+  API version:      1.38 (minimum version 1.12)
+  Go version:       go1.10.3
+  Git commit:       e68fc7a
+  Built:            Tue Aug 21 17:25:29 2018
+  OS/Arch:          linux/amd64
+  Experimental:     false
+[root@sjq150 ~]#
+
+```
 ## 2.2、启动 ： ##
+
 ```
-[root@sjq01 ~]$ systemctl start docker.service
+[root@sjq01 ~]# systemctl start docker.service
 ```
 
-启动常见错误：
+常见错误：
+
 1、SELinux is not supported with the overlay2 graph driver on this kernel
+
 ```
 [root@sjq-01 ~]# systemctl start docker.service 
 Job for docker.service failed because the control process exited with error code. See "systemctl status docker.service" and "journalctl -xe" for details.
@@ -97,7 +162,9 @@ Mar 12 17:21:57 sjq-01 systemd[1]: Failed to start Docker Application Container 
 Mar 12 17:21:57 sjq-01 systemd[1]: Unit docker.service entered failed state.
 Mar 12 17:21:57 sjq-01 systemd[1]: docker.service failed.
 ```
+
 解决方法：
+
 ```
 vim  /etc/sysconfig/docker
 添加配置内容如下：
@@ -108,9 +175,19 @@ vim  /etc/sysconfig/docker
 ```
 详见：https://docs.docker.com/storage/storagedriver/select-storage-driver/
 
+2、运行容器时出错：
+
+```
+[root@sjq01 ~]# docker run hello-world
+docker: Error response from daemon: OCI runtime create failed: unable to retrieve OCI runtime error (open /run/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/225edd3d808116d3cc5992849e60bf5369ace67c291a066ebae4ca5784bcce7a/log.json: no such file or directory): docker-runc did not terminate sucessfully: unknown.
+[root@sjq01 ~]# uname -rs  #查看系统内核版本
+Linux 3.10.0-327.el7.x86_64
+[root@sjq01 ~]# yum install http://mirror.centos.org/centos/7/os/x86_64/Packages/libseccomp-2.3.1-3.el7.x86_64.rpm
+```
+
 ## 2.4、停止 ： ##
 ```
-[root@sjq01 ~]$ systemctl stop docker.service
+[root@sjq01 ~]# systemctl stop docker.service
 ```
 
 ## 2.5、配置国内镜像： ##

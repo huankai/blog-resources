@@ -12,7 +12,7 @@ tags:
 
 2、安全性：更多的时候，镜像不想被外部的人获取，虽然可以在docker hub上申请私有repository，但是需要付费。
 
-# 一、使用 docker registry 安装#
+# 一、使用 docker registry 安装 #
 ## 1.1、安装环境： ##
 ip地址： 192.168.64.150
 	
@@ -208,8 +208,12 @@ REPOSITORY                  TAG                 IMAGE ID            CREATED     
 - group : 组类型，实质作用是组合多个仓库为一个地址
 
 ### 2.1.1、创建 hosted仓库 ###
-进入创建页面：
 
+用于存储用户自定义的镜像
+
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_06_01.png)
+
+![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_06_02.png)
 如上图：
 name :给定一个名称
 http：开启http，并设置一个端口号，
@@ -218,7 +222,7 @@ Hosted -> Deployment pollcy: 请选择 Allow redeploy 否则无法上传 Docker 
 
 其它保持默认即可。
 
-## 2.2、添加访问权限 ##
+### 2.1.2、添加访问权限 ###
 
 菜单 Security->Realms 把 Docker Bearer Token Realm 移到右边的框中保存。
 
@@ -233,16 +237,7 @@ Hosted -> Deployment pollcy: 请选择 Allow redeploy 否则无法上传 Docker 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_05.png)
 
 
-
-### 2.1.1、创建 hosted 仓库 ###
-
-用于存储用户自定义的镜像
-
-![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_06_01.png)
-
-![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_06_02.png)
-
-### 2.1.2、创建 proxy 仓库 ###
+### 2.1.3、创建 proxy 仓库 ###
 
 如果用户在 pull镜像时，这个镜像不存在，会到第三方下载镜像并保存在 docker-proxy 类型中，构建第三方镜像，跟maven一个道理
 
@@ -250,7 +245,7 @@ Hosted -> Deployment pollcy: 请选择 Allow redeploy 否则无法上传 Docker 
 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_07_02.png)
 
-### 2.1.3、创建 group 仓库 ###
+### 2.1.4、创建 group 仓库 ###
 用来合并 hosted 和 proxy,只需要暴露这个端口对外 pull，会从 hosted 和 proxy 两种类型中搜索镜像。
 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_08_01.png)
@@ -258,7 +253,7 @@ Hosted -> Deployment pollcy: 请选择 Allow redeploy 否则无法上传 Docker 
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_08-02.png)
 
 
-## 2.3、配置宿主机docker，并认证 ##
+## 2.2、配置宿主机docker，并认证 ##
 
 sudo vim /etc/docker/daemon.json 在文件中添加如下内容
 ```
@@ -292,7 +287,7 @@ Login Succeeded
 ```
 登录时，需要提供用户名和密码。认证的信息会被保存在~/.docker/config.json文件，在后续与私有镜像仓库交互时就可以被重用，而不需要每次都进行登录认证。
 
-## 2.4、推送镜像到nexus ##
+## 2.3、推送镜像到nexus ##
 
 要共享一个镜像，可以通过将其发布到托管存储库，然后其它人员就可以通过存储库获取自己需要的镜像。在将镜像推送到存储库之前，需要对镜像进行标记。当标记图像时，可以使用镜像标识符（imageId）或者镜像名称（imageName）。标识镜像的语法和格式：docker tag <imageId or imageName> <nexus-hostname>:<repository-port>/<image>:<tag>。假设这里将 tomcat:8.5 镜像标识为私有镜像仓库(192.168.64.150:8870)中的镜像，标识的执行命令如下：
 
@@ -333,7 +328,7 @@ f715ed19c28b: Pushed
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/docker/docker_09.png)
 
 
-## 2.5、使用另一台服务器拉取镜像 ##
+## 2.4、使用另一台服务器拉取镜像 ##
 
 修改配置如下：
 
