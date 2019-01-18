@@ -92,3 +92,28 @@ Setting tags for user "admin" to [administrator] ...
 ```
 [root@huangkai sbin]# ./rabbitmq-server -detached
 ```
+
+# 三、Docker 安装 #
+
+使用 docker-compose 编排服务 ：`vim docker-compose.yml`
+```
+version: "3"
+services: 
+  rabbitmq:
+	#  后缀加了 -management 表示 会开启 web管理台插件
+    image: rabbitmq:3.7.8-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/data/docker/rabbitmq/data:/var/lib/rabbitmq"
+    restart: "always
+```
+
+启动 ：
+`docker-compose up -d rabbitmq`
+
+使用浏览器访问 http://localhost:15672 ，默认登陆账号和密码为： `guest /guest`
