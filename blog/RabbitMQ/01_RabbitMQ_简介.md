@@ -1,5 +1,5 @@
 ---
-title: RabbitMQ 安装
+title: 01_RabbitMQ 安装
 date: {{ date }}
 author: huangkai
 tags:
@@ -8,7 +8,6 @@ tags:
 # 一、简介 #
 
 # 二、安装 #
-rabbitMQ需要java环境，这里不再讲述JDK的安装，百度一大把。
 ## 2.1 、安装erlang : ##
 安装erlang需要依赖的库：
 ```
