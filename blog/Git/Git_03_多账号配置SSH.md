@@ -69,4 +69,4 @@ sjq-278@DESKTOP-V9JFELK MINGW64 /e
 
 ```
 如上，测试成功后，就可以使用不同的git ssh操作了，互相不会影响。
-如果你使用的了TortoiseGit 管理工具，在自动 Load Putty Key 时，要选择对应的 ppk文件，ppk文件的生成，请点击 [这里](https://huankai.github.io/2018/03/26/Git_02_%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/) 查看。
+如果你使用的了TortoiseGit 管理工具，在自动 Load Putty Key 时，要选择对应的 ppk文件，ppk文件的生成，请点击 [这里](https://huankai.github.io/2018/03/20/Git_02_%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/) 查看。

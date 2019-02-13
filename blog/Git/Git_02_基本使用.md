@@ -7,7 +7,7 @@ tags:
 ---
 
 # 一、	安装与基本配置 #
-## 1.1、下载与安装： ##.
+## 1.1、下载与安装： ##
 Git for windows 下载地址：
 https://github.com/git-for-windows/git/tags
 选择需要的版本下载，下载完成后，双击安装，使用默认的安装即可，安装完成后，右键菜单就会出现 **Git GUI**  和 **Git Bash** 两个快捷菜单，Git GUI 我们一般不用，它没命令方式强大，一般情况我们会使用Git Bash 操作。

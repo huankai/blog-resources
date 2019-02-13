@@ -32,9 +32,9 @@ Rabbitmq集群大概分为二种方式：
 
 |ip|主机名|描述|
 |::|::|::|
-|192.168.64.128|rabbitmq01|节点1|
-|192.168.64.129|rabbitmq02|节点2|
-|192.168.64.130|rabbitmq02|节点3
+|192.168.64.128|rabbitmq01|节点1，磁盘节点|
+|192.168.64.129|rabbitmq02|节点2，内存节点|
+|192.168.64.130|rabbitmq02|节点3，内存节点|
 
 
 **节点1：**
@@ -127,6 +127,12 @@ Starting node rabbit@rabbitmq03 ...
  completed with 3 plugins.
 root@rabbitmq02:/# 
 ```
+
+注意：
+默认rabbitmq启动后是磁盘节点，在这个cluster命令下，rabbitmq02 和 rabbitmq03 是内存节点，rabbitmq01 是磁盘节点。
+如果要使rabbitmq02、rabbitmq03 都是磁盘节点，去掉 `--ram` 参数即可。
+如果想要更改节点类型，可以使用命令`rabbitmqctl change_cluster_node_type disc(ram)`,前提是必须停掉rabbit应用。
+
 使用浏览器查看，如下，两个节点都在集群中
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/rabbitmq/rabbitmq_03.png)
 
