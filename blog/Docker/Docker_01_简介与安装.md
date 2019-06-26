@@ -227,6 +227,43 @@ Adding user huangkai to group docker
 [root@sjq01 ~]# systemctl enable docker
 ```
 
+
+## 2.8、 docker 其它配置 ##
+
+```
+### 日志配置
+vim /etc/docker/daemon.json # 没有此文件则创建一个
+{
+  "log-opts": {
+    "max-size": "100m",
+    "max-file": "7"
+  }
+}
+
+
+## 容器时间与宿主机同步
+### 1、先配置宿主机的时区，注意， Asia/Shanghai 必须严格大小写，不然会导致时间不正确。
+sudo echo 'Asia/Shanghai' > /etc/timezone
+### 2、再将 /etc/timezone 与 /etc/localtime 两个文件挂载到容器中，使用 docker-compose 部分如下：
+
+version: "3.8"
+services:
+  server-name:
+     volumes:
+      - "/etc/timezone:/etc/timezone"
+      - "/etc/localtime:/etc/localtime:ro"
+```
+
+
+## 2.9、 docker-compose 安装 ##
+
+文档地址 ：https://github.com/docker/compose/releases
+
+```
+[root@localhost ~]# curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+ 
+ [root@localhost ~]# chmod +x /usr/local/bin/docker-compose
+```
 # 三、常用操作 #
 
 ## 3.1、列出镜像 ##
