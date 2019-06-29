@@ -1,7 +1,10 @@
 ---
 title: Linux 配置
+
 date: {{ date }}
+
 author: huangkai
+
 tags:
     - Linux
 ---
@@ -9,6 +12,7 @@ tags:
 # 一、配置网络环境 #
 
 [huangkai@sjq150 hadoop]$ vim /etc/sysconfig/network-scripts/ifcfg-ens33
+
 ```
 TYPE=Ethernet
 BOOTPROTO=none
@@ -54,4 +58,17 @@ SELINUX=disabled
 ```
 
 # 四、配置 SSH 限制IP 登陆 #
+
+# 五、配置服务器时间与网络时间同步 #
+
+```
+[root@localhost ~]# date
+Wed Jun 19 10: 59: 26 CST 2019
+[root@localhost ~]# yum -y install ntpdate
+[root@localhost ~]# ntpdate time.nuri.net
+19 Jun 11: 00: 33 ntpdate[32264]: step time server 211.115.194.21 offset 57.200854 sec
+[root@localhost ~]# date
+Wed Jun 19 11: 00: 42 CST 2019
+[root@localhost ~]# 
+```
 

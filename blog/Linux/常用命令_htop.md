@@ -11,8 +11,8 @@ htop 的界面字符解释和 top 差不多，可以参照: [https://huankai.git
 # 安装 #
 安装环境 ：Centos 7
 
-安装扩展源:**sudo yum install epel-release**
-安装top:**sudo yum install htop**
+安装扩展源:**sudo yum install epel-release -y**
+安装top:**sudo yum install htop -y**
 
 安装完成后，在命令行执行 ``htop`` 如下：
 ![](https://raw.githubusercontent.com/huankai/blog-resources/master/photos/Linux/htop_01.png)

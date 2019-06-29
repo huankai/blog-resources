@@ -73,6 +73,15 @@ services:
 #忽略表名大小写
 lower_case_table_names=1
 
+
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+init_connect=’SET NAMES utf8mb4'
+
+[mysql]
+
+default-character-set=utf8mb4
+
 [client]
 default-character-set=utf8
 ############################### 
