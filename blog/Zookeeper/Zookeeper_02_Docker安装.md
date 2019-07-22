@@ -26,84 +26,104 @@ tags:
 ```
 
 # 三、配置： #
+<font color='red'>如下中的environment ZOO_SERVERS 如果某个节点配置的是 observer 角色，可以使用 ip:port:observer;2181 配置，此时，此节点只是 observer 角色，不参与 leader 投票选举，参考 : https://zookeeper.apache.org/doc/r3.5.5/zookeeperReconfig.html </font>
 
-- sjq128
+- node100
 
 ```
-version: "3"
+version: "3.8"
 services:
   zookeeper:
-    image: zookeeper
-	restart: "always"
-	hostname: sjq128
-	container_name: zookeeper
-	volumes:
-	  - "/etc/timezone:/etc/timezone:ro"
-	  - "/etc/localtime:/etc/localtime:ro"
-	ports:
-	  - "2181:2181"
-	  - "2888:2888"
-	  - "3888:3888"
-	environment:
-	  ZOO_MY_ID: 1
-	  ZOOKEEPER_PORT: 2181
-	  ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=sjq129:2888:3888 server.3=sjq130:2888:3888
-	extra_hosts:
-	  - "sjq128:192.168.64.128"
-	  - "sjq129:192.168.64.129"
-	  - "sjq130:192.168.64.130"
+    image: zookeeper:3.5
+    container_name: zookeeper
+    hostname: node100
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/www/docker/zookeeper/data:/data"
+      - "/www/docker/zookeeper/datalog:/datalog"
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    environment:
+      ZOO_MY_ID: 1
+	  ZOO_STANDALONE_ENABLED: "false" # 默认为true
+      ZOO_ADMINSERVER_ENABLED: "false" #是否开启 admin 模式，默认为true,admin 模式使用 http 8080 端口，可以使用 http://${ip}:8080/commands/stat
+      ZOO_AUTOPURGE_PURGEINTERVAL: 48  
+# 这个参数和 ZOO_AUTOPURGE_PURGEINTERVAL 搭配使用，这个参数指定了需要保留的文件数目。默认是保留3个
+      ZOO_AUTOPURGE_SNAPRETAINCOUNT: 60 
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=node101:2888:3888;2181 server.3=node102:2888:3888;2181
+    extra_hosts:
+      - "node100:192.168.117.100"
+      - "node101:192.168.117.101"
+      - "node102:192.168.117.102"
+    restart: always
 ```
-- sjq129
+- node101
 
 ```
-version: "3"
+version: "3.8"
 services:
   zookeeper:
-    image: zookeeper
-	restart: "always"
-	hostname: sjq129
-	container_name: zookeeper
-	volumes:
-	  - "/etc/timezone:/etc/timezone:ro"
-	  - "/etc/localtime:/etc/localtime:ro"
-	ports:
-	  - "2181:2181"
-	  - "2888:2888"
-	  - "3888:3888"
-	environment:
-	  ZOO_MY_ID: 2	
-	  ZOOKEEPER_PORT: 2181
-	  ZOO_SERVERS: server.1=server.1=sjq128:2888:3888 server.2=0.0.0.0:2888:3888 server.3=sjq130:2888:3888
-	extra_hosts:
-	  - "sjq128:192.168.64.128"
-	  - "sjq129:192.168.64.129"
-	  - "sjq130:192.168.64.130"
+    image: zookeeper:3.5
+    container_name: zookeeper
+    hostname: node101
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/www/docker/zookeeper/data:/data"
+      - "/www/docker/zookeeper/datalog:/datalog"
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_STANDALONE_ENABLED: "false"
+      ZOO_ADMINSERVER_ENABLED: "false"
+      ZOO_AUTOPURGE_PURGEINTERVAL: 48  
+# 这个参数和 ZOO_AUTOPURGE_PURGEINTERVAL 搭配使用，这个参数指定了需要保留的文件数目。默认是保留3个
+      ZOO_AUTOPURGE_SNAPRETAINCOUNT: 60 
+      ZOO_SERVERS: server.1=node100:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=node102:2888:3888;2181
+    extra_hosts:
+      - "node100:192.168.117.100"
+      - "node101:192.168.117.101"
+      - "node102:192.168.117.102"
+    restart: always
 ```
-- sjq130
+- node102
 
 ```
-version: "3"
+version: "3.8"
 services:
   zookeeper:
-    image: zookeeper
-	restart: "always"
-	hostname: sjq130
-	container_name: zookeeper
-	volumes:
-	  - "/etc/timezone:/etc/timezone:ro"
-	  - "/etc/localtime:/etc/localtime:ro"
-	ports:
-	  - "2181:2181"
-	  - "2888:2888"
-	  - "3888:3888"
-	environment:
-	  ZOO_MY_ID: 3
-	  ZOOKEEPER_PORT: 2181
-	  ZOO_SERVERS: server.1=sjq128:2888:3888 server.2=sjq129:2888:3888 server.3=0.0.0.0:2888:3888
-	extra_hosts:
-	  - "sjq128:192.168.64.128"
-	  - "sjq129:192.168.64.129"
-	  - "sjq130:192.168.64.130"
+    image: zookeeper:3.5
+    container_name: zookeeper
+    hostname: node102
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/www/docker/zookeeper/data:/data"
+      - "/www/docker/zookeeper/datalog:/datalog"
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_STANDALONE_ENABLED: "false"
+      ZOO_ADMINSERVER_ENABLED: "false"
+# 单位是小时，需要填写一个1或更大的整数，默认是0，表示不开启自己清理功能
+      ZOO_AUTOPURGE_PURGEINTERVAL: 48  
+# 这个参数和 ZOO_AUTOPURGE_PURGEINTERVAL 搭配使用，这个参数指定了需要保留的文件数目。默认是保留3个
+      ZOO_AUTOPURGE_SNAPRETAINCOUNT: 60 
+      ZOO_SERVERS: server.1=node100:2888:3888;2181 server.2=node101:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+    extra_hosts:
+      - "node100:192.168.117.100"
+      - "node101:192.168.117.101"
+      - "node102:192.168.117.102"
+    restart: always
 ```
 
 
@@ -117,10 +137,77 @@ services:
 # 五、进入zookeeper 容器，查看启动状态 #
 
 ```
-[huangkai@sjq130 docker]$ docker-compose exec zookeeper bash
-bash-4.4# zkServer.sh status
+[huangkai@l101 docker]$ docker-compose exec zookeeper bash
+root@node101:/apache-zookeeper-3.5.5-bin# zkServer.sh status
 ZooKeeper JMX enabled by default
 Using config: /conf/zoo.cfg
+Client port found: 2181. Client address: localhost.
 Mode: leader
-bash-4.4# 
+root@node101:/apache-zookeeper-3.5.5-bin# 
+```
+
+六、zkui docker 安装
+================
+
+6.1、下载源码：
+	https://github.com/DeemOpen/zkui
+
+解压，使用maven 打包：
+```	
+mvn clean package -Dtest.skip=true
+```
+6.2、创建 zkui 目录
+```
+[huangkai@100 docker ]$ mkdir -p /www/docker/zookeeper-ui/config
+
+```
+6.3、将下载下的源码中的 `bootstrap.sh` 文件上传到 `/www/docker/zookeeper-ui` 目录下
+
+6.4、编写 Dockerfile
+vim /www/docker/zookeeper-ui/Dockerfile ,部分摘自 源码中的 Dockerfile  
+```
+
+FROM java:8
+
+MAINTAINER Miguel Garcia Puyol <miguelpuyol@gmail.com>
+
+WORKDIR /var/app
+
+ADD zkui-*.jar /var/app/zkui.jar
+ADD bootstrap.sh /var/app/bootstrap.sh
+RUN chmod u+x /var/app/bootstrap.sh
+ENTRYPOINT ["/var/app/bootstrap.sh"]
+
+EXPOSE 9090
+```
+6.5、复制源码根目录下的 `config.cfg `文件到 `/www/docker/zookeeper-ui/config` 中，修改 zookeeper 地址
+
+```
+....
+zkServer=192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
+...
+```
+
+6.6、修改 docker-compose.yml 配置 zookeeper-ui 
+vim /www/docker/zookeeper-ui/docker-compose.yml
+
+```
+version: "3.8"
+services:
+  zookeeper-ui:
+    build: ./zookeeper-ui
+    container_name: zookeeper-ui
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/www/docker/zookeeper-ui/config/config.cfg:/var/app/config.cfg"
+    ports:
+      - "9090:9090"
+    restart: always
+```
+
+6.7、启动 zookeeper-ui
+
+```
+docker-compose up -d zookeeper-ui
 ```

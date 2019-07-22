@@ -347,3 +347,82 @@ Kafka采用拉取模型，由消费者自己记录消费状态，每个消费者
 2、对于Kafka而言，pull模式更合适，它可简化broker的设计，consumer可自主控制消费消息的速率，同时consumer可以自己控制消费方式——即可批量消费也可逐条消费，同时还能选择不同的提交方式从而实现不同的传输语义。
 
 3、pull模式不足之处是，如果kafka没有数据，消费者可能会陷入循环中，一直等待数据到达。为了避免这种情况，我们在拉请求中有参数，允许消费者请求在等待数据到达的“长轮询”中进行阻塞（并且可选地等待到给定的字节数，以确保大的传输大小）。
+
+
+四、kafka docker 安装
+=================
+
+参考文档 : https://github.com/wurstmeister/kafka-docker
+
+三节点安装如下：
+
+节点一：192.168.117.100
+```
+services:
+ kafka:
+    image: wurstmeister/kafka:2.12-2.0.1
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+		# borker id
+      KAFKA_BROKER_ID: 1
+      KAFKA_MESSAGE_MAX_BYTES: 2000000
+		# 允许自动创建 topic
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.117.100
+      KAFKA_ZOOKEEPER_CONNECT: 192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always
+```
+
+节点二：192.168.117.101
+```
+services:
+ kafka:
+    image: wurstmeister/kafka:2.12-2.0.1
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+		# borker id
+      KAFKA_BROKER_ID: 2
+      KAFKA_MESSAGE_MAX_BYTES: 2000000
+		# 允许自动创建 topic
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.117.101
+      KAFKA_ZOOKEEPER_CONNECT: 192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always
+```
+
+节点三：192.168.117.102
+```
+services:
+ kafka:
+    image: wurstmeister/kafka:2.12-2.0.1
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+		# borker id
+      KAFKA_BROKER_ID: 3
+      KAFKA_MESSAGE_MAX_BYTES: 2000000
+		# 允许自动创建 topic
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.117.102
+      KAFKA_ZOOKEEPER_CONNECT: 192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always
+```
+启动 服务: `docker-compose up -d kafka`
+
