@@ -365,8 +365,10 @@ services:
     ports:
       - "9092:9092"
     environment:
-		# borker id
+		# borker id，集群全局唯一
       KAFKA_BROKER_ID: 1
+      # kafka 数据持久化目录，使用此镜像时 默认为 /kafka/logs-随机数生成的目录
+      KAFKA_LOG_DIRS: "/kafka/logs"
       KAFKA_MESSAGE_MAX_BYTES: 2000000
 		# 允许自动创建 topic
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
@@ -376,6 +378,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/www/docker/kafka/logs:/kafka/logs:rw"
     restart: always
 ```
 
@@ -388,8 +391,10 @@ services:
     ports:
       - "9092:9092"
     environment:
-		# borker id
+		# borker id，集群全局唯一
       KAFKA_BROKER_ID: 2
+      # kafka 数据持久化目录，使用此镜像时 默认为 /kafka/logs-随机数生成的目录
+      KAFKA_LOG_DIRS: "/kafka/logs"
       KAFKA_MESSAGE_MAX_BYTES: 2000000
 		# 允许自动创建 topic
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
@@ -399,6 +404,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/www/docker/kafka/logs:/kafka/logs:rw"
     restart: always
 ```
 
@@ -411,8 +417,10 @@ services:
     ports:
       - "9092:9092"
     environment:
-		# borker id
+		# borker id，集群全局唯一
       KAFKA_BROKER_ID: 3
+      # kafka 数据持久化目录，使用此镜像时 默认为 /kafka/logs-随机数生成的目录
+      KAFKA_LOG_DIRS: "/kafka/logs"
       KAFKA_MESSAGE_MAX_BYTES: 2000000
 		# 允许自动创建 topic
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
@@ -422,6 +430,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/www/docker/kafka/logs:/kafka/logs:rw"
     restart: always
 ```
 启动 服务: `docker-compose up -d kafka`
