@@ -10,9 +10,9 @@ tags:
 
 |服务器|ip|
 |:-:|:-:| 
-|sjq128|192.168.64.128|
-|sjq129|192.168.64.129|
-|sjq130|192.168.64.130|
+|node100|192.168.117.100|
+|node101|192.168.117.101|
+|node102|192.168.117.102|
 
 # 二、docker 安装： #
 
@@ -26,7 +26,7 @@ tags:
 ```
 
 # 三、配置： #
-<font color='red'>如下中的environment ZOO_SERVERS 如果某个节点配置的是 observer 角色，可以使用 ip:port:observer;2181 配置，此时，此节点只是 observer 角色，不参与 leader 投票选举，参考 : https://zookeeper.apache.org/doc/r3.5.5/zookeeperReconfig.html </font>
+<font color='red'>如下中的environment ZOO_SERVERS 如果某个节点配置的是 observer 角色，可以使用 `ip:port:observer;2181` 配置，此时，此节点只是 observer 角色，不参与 leader 投票选举，参考 : https://zookeeper.apache.org/doc/r3.5.5/zookeeperReconfig.html </font>
 
 - node100
 
@@ -145,6 +145,30 @@ Client port found: 2181. Client address: localhost.
 Mode: leader
 root@node101:/apache-zookeeper-3.5.5-bin# 
 ```
+
+**问题：**
+1、在某个从节点上使用 `zkServer.sh status` 查看状态时，出现如下：
+```
+root@node100:/apache-zookeeper-3.5.5-bin# zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /conf/zoo.cfg
+Client port found: 2181. Client address localhost.
+Error contacting service: It is probably not running.
+```
+并且使用docker 查看日志信息时，答应如下日志信息：
+```
+[root@node100 docker]# docker-compose logs -f --tail 100 zookeeper
+zookeeper			   | 2019-07-23 10:12:32,800 [myid:1] - INFO  [QuorumPeer[myid=1](plain=/0.0.0.0:2181)(secure=disabled):QuorumCnxManager@430] - Have smaller server identifier, so dropping the connection: (3, 1)
+zookeeper               | 2019-07-23 10:12:32,800 [myid:1] - INFO  [QuorumPeer[myid=1](plain=/0.0.0.0:2181)(secure=disabled):FastLeaderElection@919] - Notification time out: 51200
+zookeeper               | 2019-07-23 10:13:24,002 [myid:1] - INFO  [QuorumPeer[myid=1](plain=/0.0.0.0:2181)(secure=disabled):QuorumCnxManager@430] - Have smaller server identifier, so dropping the connection: (2, 1)
+zookeeper               | 2019-07-23 10:13:24,004 [myid:1] - INFO  [QuorumPeer[myid=1](plain=/0.0.0.0:2181)(secure=disabled):QuorumCnxManager@430] - Have smaller server identifier, so dropping the connection: (3, 1)
+zookeeper               | 2019-07-23 10:13:24,004 [myid:1] - INFO  [QuorumPeer[myid=1](plain=/0.0.0.0:2181)(secure=disabled):FastLeaderElection@919] - Notification time out: 60000
+```
+解决方法：重新启动 leader 节点
+参考资料：https://issues.apache.org/jira/browse/ZOOKEEPER-2938
+
+2、按上面的方式启动后，使用 `zkCli.sh` 连接，执行 `ls /` 报错Session 失效，zk ui 工具也不能连接zookeeper，重新启动所有节点即可
+
 
 六、zkui docker 安装
 ================

@@ -365,12 +365,16 @@ services:
     ports:
       - "9092:9092"
     environment:
-		# borker id，集群全局唯一
+      # borker id，集群全局唯一
       KAFKA_BROKER_ID: 1
+	  # 主题分区数，默认值为 1 
+	  KAFKA_NUM_PARTITIONS: 3
+      # 分区副本数，默认值为 1
+	  KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       # kafka 数据持久化目录，使用此镜像时 默认为 /kafka/logs-随机数生成的目录
       KAFKA_LOG_DIRS: "/kafka/logs"
       KAFKA_MESSAGE_MAX_BYTES: 2000000
-		# 允许自动创建 topic
+	  # 允许自动创建 topic
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
       KAFKA_ADVERTISED_HOST_NAME: 192.168.117.100
       KAFKA_ZOOKEEPER_CONNECT: 192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
@@ -391,12 +395,16 @@ services:
     ports:
       - "9092:9092"
     environment:
-		# borker id，集群全局唯一
+	  # borker id，集群全局唯一
       KAFKA_BROKER_ID: 2
+	  # 主题分区数，默认值为 1 
+	  KAFKA_NUM_PARTITIONS: 3
+      # 分区副本数，默认值为 1
+	  KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       # kafka 数据持久化目录，使用此镜像时 默认为 /kafka/logs-随机数生成的目录
       KAFKA_LOG_DIRS: "/kafka/logs"
       KAFKA_MESSAGE_MAX_BYTES: 2000000
-		# 允许自动创建 topic
+      # 允许自动创建 topic
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
       KAFKA_ADVERTISED_HOST_NAME: 192.168.117.101
       KAFKA_ZOOKEEPER_CONNECT: 192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
@@ -417,12 +425,16 @@ services:
     ports:
       - "9092:9092"
     environment:
-		# borker id，集群全局唯一
+	  # borker id，集群全局唯一
       KAFKA_BROKER_ID: 3
+	  # 主题分区数，默认值为 1 
+	  KAFKA_NUM_PARTITIONS: 3
+      # 分区副本数，默认值为 1
+	  KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       # kafka 数据持久化目录，使用此镜像时 默认为 /kafka/logs-随机数生成的目录
       KAFKA_LOG_DIRS: "/kafka/logs"
       KAFKA_MESSAGE_MAX_BYTES: 2000000
-		# 允许自动创建 topic
+	  # 允许自动创建 topic
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" 
       KAFKA_ADVERTISED_HOST_NAME: 192.168.117.102
       KAFKA_ZOOKEEPER_CONNECT: 192.168.117.100:2181,192.168.117.101:2181,192.168.117.102:2181
