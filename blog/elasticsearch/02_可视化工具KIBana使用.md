@@ -1,5 +1,5 @@
 ---
-title: ElasticSearch 可视化工具 KIBana 使用
+title: ElasticSearch 可视化工具 Kibana 使用
 date: {{ date }}
 author: huangkai
 tags:
@@ -25,7 +25,25 @@ kibana:
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+      - "/data/docker/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml"
     restart: "always"
+```
+kibana.yml 内容如下: 
+```
+[huangkai@instance-3knenqmy docker]$ cat kibana/config/kibana.yml 
+---
+# Default Kibana configuration from kibana-docker.
+#
+server.name: kibana
+server.host: "0"
+#配置上下文路径，默认为 /
+server.basePath: /kibana
+# 配置上下文路径 是否重新，默认为false，当配置了 server.basePath 后，此值要配置为 true,否则会报 404.
+server.rewriteBasePath: true
+# 配置国际化，支持 en/zh-CN，默认为 en,配置为 zh-CN时，需要下载汉化插件： https://github.com/anbai-inc/Kibana_Hanization
+#i18n.locale: "zh-CN"
+elasticsearch.url: http://elasticsearch:9200
+xpack.monitoring.ui.container.elasticsearch.enabled: true
 ```
 
 说明：

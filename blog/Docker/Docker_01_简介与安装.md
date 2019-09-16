@@ -253,9 +253,13 @@ services:
       - "/etc/timezone:/etc/timezone"
       - "/etc/localtime:/etc/localtime:ro"
 ```
+## 2.9、 docker 日志查看 ##
 
-
-## 2.9、 docker-compose 安装 ##
+Centos docker 日志查看:
+```
+[huangkai@localhost springcloud]$ journalctl -u docker
+```
+## 2.10、 docker-compose 安装 ##
 
 文档地址 ：https://github.com/docker/compose/releases
 
@@ -264,6 +268,8 @@ services:
  
  [root@localhost ~]# chmod +x /usr/local/bin/docker-compose
 ```
+
+<font color='red'>使用 `docker-compose build` 时，建议 build 目录下的文件尽量少，如果过多，会导致 build非常慢，可能是因为会将build所在目录下的所有文件添加到 build 上下文中，当然， 也可以使用 `.dockerignore` 文件来忽略指定的文件。</font>笔者之前在公司运维的过程中，有些容器目录下存在十多个jar 文件(之前版本的jar文件)，删除该容器后重新 `docker-compose up -d`，在重新 up 之前需要 `building` ，此过程非常慢，耗费了十多分钟，在网上也没有找到相关的解决方案，后来将该build 目录中的文件删除，只留下 docker-compose 与 Dockerfile 文件，重新构建，不到5秒就构建完成了。
 # 三、常用操作 #
 
 ## 3.1、列出镜像 ##

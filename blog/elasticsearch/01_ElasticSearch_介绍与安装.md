@@ -27,7 +27,37 @@ elasticsearch:
     volumes:
      - "/etc/timezone:/etc/timezone:ro"
      - "/etc/localtime:/etc/localtime:ro"
+     - "/www/docker/elasticsearch/config/:/usr/share/elasticsearch/config/"
+     - "/www/docker/elasticsearch/data:/usr/share/elasticsearch/data"
+     - "/www/docker/elasticsearch/plugins/ik:/usr/share/elasticsearch/plugins/ik"
     restart: "always"
+```
+
+elasticsearch.yml 配置如下：
+```
+# 集群名称，所有加入该集群的名称都必须一致
+cluster.name: "docker-cluster"
+
+# 绑定 host,这里绑定所有
+network.host: 0
+
+network.publish_host: 192.168.1.50
+
+#集群节点名
+node.name: node-1
+
+# http 服务端口，默认 9200
+http.port: 9200
+
+# minimum_master_nodes need to be explicitly set when bound on a public IP
+# # # set to 1 to allow single node clusters
+# # # Details: https://github.com/elastic/elasticsearch/pull/17288
+
+# 配置集群主机地址，单节点不需要配置
+# discovery.zen.ping.unicast.hosts: ["192.168.1.100","192.168.1.101","192.168.1.102"]
+
+# 
+# discovery.zen.minimum_master_nodes: 2
 ```
 
 使用 root 账号修改 linux 参数，添加如下内容，并执行 `sysctl -p` 使配置生效：
